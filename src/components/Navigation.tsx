@@ -11,6 +11,18 @@ const Navigation = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
+              <Link to="/landing">
+                <NavigationMenuLink
+                  className={cn(
+                    "px-4 py-2 hover:bg-accent rounded-md transition-colors",
+                    location.pathname === "/landing" && "bg-accent"
+                  )}
+                >
+                  Prodotti
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <Link to="/">
                 <NavigationMenuLink
                   className={cn(

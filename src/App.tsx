@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Sales from "./pages/Sales";
 import Menu from "./pages/Menu";
 import Profits from "./pages/Profits";
+import Landing from "./pages/Landing";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/sales" element={<Sales />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/profits" element={<Profits />} />
+          <Route path="/landing" element={<Landing />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
