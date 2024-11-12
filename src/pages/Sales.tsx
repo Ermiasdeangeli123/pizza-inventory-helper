@@ -4,37 +4,49 @@ import { EuroIcon, TrendingUpIcon } from "lucide-react";
 import { toast } from "sonner";
 import { usePizzaStore } from "@/queries/pizzaQueries";
 import SalesTable from "@/components/sales/SalesTable";
+import { initialInventory } from "@/lib/data";
 
 const Sales = () => {
   const { pizzas } = usePizzaStore();
-  const [salesCount, setSalesCount] = useState<Record<string, number>>({});
+  const [inventory, setInventory] = useState(initialInventory);
 
-  const pizzasWithCount = pizzas.map((pizza) => ({
-    ...pizza,
-    count: salesCount[pizza.id] || 0,
-  }));
+  const updateInventory = (pizzaId: string, increment: boolean) => {
+    const pizza = pizzas.find(p => p.id === pizzaId);
+    if (!pizza) return;
+
+    setInventory(prev => prev.map(item => {
+      const pizzaIngredient = pizza.ingredients.find(ing => ing.ingredientId === item.id);
+      if (!pizzaIngredient) return item;
+
+      const quantityChange = increment ? -pizzaIngredient.quantity : pizzaIngredient.quantity;
+      const newQuantity = item.quantity + quantityChange;
+
+      if (newQuantity < 0) {
+        toast.error(`Ingredienti insufficienti per ${item.name}`);
+        return item;
+      }
+
+      return {
+        ...item,
+        quantity: newQuantity
+      };
+    }));
+  };
 
   const handleIncrement = (id: string) => {
-    setSalesCount((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1,
-    }));
-    toast.success("Vendita registrata");
+    updateInventory(id, true);
   };
 
   const handleDecrement = (id: string) => {
-    setSalesCount((prev) => ({
-      ...prev,
-      [id]: Math.max(0, (prev[id] || 0) - 1),
-    }));
+    updateInventory(id, false);
   };
 
-  const totalRevenue = pizzasWithCount.reduce(
-    (acc, pizza) => acc + pizza.price * pizza.count,
+  const totalRevenue = pizzas.reduce(
+    (acc, pizza) => acc + pizza.price * (pizza.count || 0),
     0
   );
 
-  const totalSales = pizzasWithCount.reduce((acc, pizza) => acc + pizza.count, 0);
+  const totalSales = pizzas.reduce((acc, pizza) => acc + (pizza.count || 0), 0);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -71,7 +83,7 @@ const Sales = () => {
 
         <Card>
           <SalesTable
-            pizzas={pizzasWithCount}
+            pizzas={pizzas}
             onIncrement={handleIncrement}
             onDecrement={handleDecrement}
           />
