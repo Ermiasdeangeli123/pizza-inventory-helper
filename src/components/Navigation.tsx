@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -31,6 +31,18 @@ const Navigation = () => {
                   )}
                 >
                   Vendite
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/menu">
+                <NavigationMenuLink
+                  className={cn(
+                    "px-4 py-2 hover:bg-accent rounded-md transition-colors",
+                    location.pathname === "/menu" && "bg-accent"
+                  )}
+                >
+                  Menu
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
