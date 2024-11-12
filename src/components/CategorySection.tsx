@@ -27,17 +27,19 @@ const CategorySection = ({ category, items, onUpdateQuantity, onAddItem }: Categ
   const [newItemQuantity, setNewItemQuantity] = useState("");
   const [newItemUnit, setNewItemUnit] = useState("");
   const [newItemMinStock, setNewItemMinStock] = useState("");
+  const [newItemCostPerUnit, setNewItemCostPerUnit] = useState("");
 
   if (items.length === 0 && !isDialogOpen) return null;
 
   const handleAddNewItem = () => {
-    if (!newItemName || !newItemQuantity || !newItemUnit || !newItemMinStock) {
+    if (!newItemName || !newItemQuantity || !newItemUnit || !newItemMinStock || !newItemCostPerUnit) {
       toast.error("Compila tutti i campi");
       return;
     }
 
     const quantity = parseInt(newItemQuantity);
     const minStock = parseInt(newItemMinStock);
+    const costPerUnit = parseFloat(newItemCostPerUnit);
 
     if (isNaN(quantity) || quantity < 0) {
       toast.error("Inserisci una quantità valida");
@@ -49,18 +51,26 @@ const CategorySection = ({ category, items, onUpdateQuantity, onAddItem }: Categ
       return;
     }
 
+    if (isNaN(costPerUnit) || costPerUnit < 0) {
+      toast.error("Inserisci un costo per unità valido");
+      return;
+    }
+
     onAddItem({
       name: newItemName,
       category: category.id,
       quantity,
       unit: newItemUnit,
       minStock,
+      costPerUnit,
+      initialQuantity: quantity  // Add initialQuantity equal to the initial quantity
     });
 
     setNewItemName("");
     setNewItemQuantity("");
     setNewItemUnit("");
     setNewItemMinStock("");
+    setNewItemCostPerUnit("");
     setIsDialogOpen(false);
     toast.success("Alimento aggiunto con successo");
   };
@@ -122,6 +132,18 @@ const CategorySection = ({ category, items, onUpdateQuantity, onAddItem }: Categ
                   onChange={(e) => setNewItemMinStock(e.target.value)}
                   placeholder="Es: 5"
                   min="0"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="costPerUnit">Costo per unità</Label>
+                <Input
+                  id="costPerUnit"
+                  type="number"
+                  value={newItemCostPerUnit}
+                  onChange={(e) => setNewItemCostPerUnit(e.target.value)}
+                  placeholder="Es: 5.50"
+                  min="0"
+                  step="0.01"
                 />
               </div>
               <Button onClick={handleAddNewItem}>Aggiungi</Button>
