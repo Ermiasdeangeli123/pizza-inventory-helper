@@ -20,12 +20,12 @@ const App = () => (
       <BrowserRouter>
         <Navigation />
         <Routes>
-          <Route path="/landing" element={<Landing />} />
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/inventory" element={<Index />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/profits" element={<Profits />} />
-          <Route path="*" element={<Navigate to="/landing" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

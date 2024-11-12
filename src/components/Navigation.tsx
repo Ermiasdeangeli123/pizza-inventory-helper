@@ -6,7 +6,7 @@ const Navigation = () => {
   const location = useLocation();
 
   // Don't show navigation on landing page
-  if (location.pathname === "/landing") {
+  if (location.pathname === "/") {
     return null;
   }
 
@@ -16,11 +16,11 @@ const Navigation = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link to="/">
+              <Link to="/inventory">
                 <NavigationMenuLink
                   className={cn(
                     "px-4 py-2 hover:bg-accent rounded-md transition-colors",
-                    location.pathname === "/" && "bg-accent"
+                    location.pathname === "/inventory" && "bg-accent"
                   )}
                 >
                   Inventario
