@@ -11,7 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EuroIcon, TrendingUpIcon } from "lucide-react";
+import { EuroIcon, TrendingUpIcon, PlusCircle } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 type Pizza = {
   id: string;
@@ -30,7 +39,35 @@ const initialPizzas: Pizza[] = [
 
 const Sales = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>(initialPizzas);
-  const { toast } = useToast();
+  const [newPizzaName, setNewPizzaName] = useState("");
+  const [newPizzaPrice, setNewPizzaPrice] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleAddNewPizza = () => {
+    if (!newPizzaName || !newPizzaPrice) {
+      toast.error("Inserisci nome e prezzo della pizza");
+      return;
+    }
+
+    const price = parseFloat(newPizzaPrice);
+    if (isNaN(price) || price <= 0) {
+      toast.error("Inserisci un prezzo valido");
+      return;
+    }
+
+    const newPizza: Pizza = {
+      id: newPizzaName.toLowerCase().replace(/\s+/g, '-'),
+      name: newPizzaName,
+      price: price,
+      count: 0,
+    };
+
+    setPizzas(prev => [...prev, newPizza]);
+    setNewPizzaName("");
+    setNewPizzaPrice("");
+    setIsDialogOpen(false);
+    toast.success("Pizza aggiunta con successo");
+  };
 
   const handleIncrement = (id: string) => {
     setPizzas((prev) =>
@@ -38,10 +75,7 @@ const Sales = () => {
         pizza.id === id ? { ...pizza, count: pizza.count + 1 } : pizza
       )
     );
-    toast({
-      title: "Vendita registrata",
-      description: "Il conteggio è stato aggiornato",
-    });
+    toast.success("Vendita registrata");
   };
 
   const handleDecrement = (id: string) => {
@@ -63,7 +97,46 @@ const Sales = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Conteggio Vendite</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Conteggio Vendite</h1>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Aggiungi Pizza
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Aggiungi Nuova Pizza</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Nome Pizza</Label>
+                  <Input
+                    id="name"
+                    value={newPizzaName}
+                    onChange={(e) => setNewPizzaName(e.target.value)}
+                    placeholder="Es: Quattro Stagioni"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="price">Prezzo (€)</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={newPizzaPrice}
+                    onChange={(e) => setNewPizzaPrice(e.target.value)}
+                    placeholder="Es: 10.50"
+                    step="0.50"
+                    min="0"
+                  />
+                </div>
+                <Button onClick={handleAddNewPizza}>Aggiungi</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2 mb-8">
           <Card className="p-6">
