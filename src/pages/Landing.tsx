@@ -1,49 +1,90 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { initialInventory } from "@/lib/data";
 
 const Landing = () => {
   const navigate = useNavigate();
 
-  const handleAddToInventory = () => {
-    // In a real application, this would be handled by a backend
-    // For now, we'll just navigate to inventory
-    toast.success("Prodotti aggiunti all'inventario!");
+  const handleGetStarted = () => {
+    toast.success("Benvenuto! Iniziamo a gestire la tua pizzeria.");
     navigate("/");
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Forniture per Pizzerie</h1>
-        <p className="text-xl text-gray-600">Ingredienti di alta qualità per la tua pizzeria</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-background to-accent/10">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Gestisci la Tua Pizzeria con Facilità
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            La soluzione completa per gestire inventario, costi e profitti della tua pizzeria
+          </p>
+          <Button 
+            size="lg"
+            onClick={handleGetStarted}
+            className="text-lg px-8 py-6"
+          >
+            Inizia Ora
+          </Button>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {initialInventory.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-            <p className="text-gray-600 mb-4">
-              {item.quantity} {item.unit} disponibili
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-card p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold mb-4">Gestione Inventario</h3>
+            <p className="text-muted-foreground">
+              Tieni traccia di tutti i tuoi ingredienti in tempo reale. Mai più scorte esaurite o sprechi.
             </p>
-            <p className="text-lg font-bold mb-4">€{item.costPerUnit.toFixed(2)}/{item.unit}</p>
-            <div className="text-sm text-gray-500 mb-4">
-              <p>✓ Qualità Premium</p>
-              <p>✓ Consegna Rapida</p>
-              <p>✓ Prezzo Competitivo</p>
-            </div>
           </div>
-        ))}
-      </div>
+          <div className="bg-card p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold mb-4">Controllo Costi</h3>
+            <p className="text-muted-foreground">
+              Monitora e ottimizza i costi degli ingredienti. Massimizza i tuoi margini di profitto.
+            </p>
+          </div>
+          <div className="bg-card p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold mb-4">Analisi Profitti</h3>
+            <p className="text-muted-foreground">
+              Visualizza report dettagliati sui tuoi profitti e identifica opportunità di crescita.
+            </p>
+          </div>
+        </div>
 
-      <div className="text-center mt-12">
-        <Button 
-          onClick={handleAddToInventory}
-          className="text-lg px-8 py-6"
-        >
-          Aggiungi Tutti i Prodotti al Tuo Inventario
-        </Button>
+        {/* Benefits Section */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <h2 className="text-3xl font-bold mb-8">Perché Scegliere la Nostra App?</h2>
+          <ul className="space-y-4 text-left">
+            <li className="flex items-center">
+              <span className="text-primary mr-2">✓</span>
+              <span>Interfaccia intuitiva e facile da usare</span>
+            </li>
+            <li className="flex items-center">
+              <span className="text-primary mr-2">✓</span>
+              <span>Aggiornamenti in tempo reale dell'inventario</span>
+            </li>
+            <li className="flex items-center">
+              <span className="text-primary mr-2">✓</span>
+              <span>Calcolo automatico dei profitti</span>
+            </li>
+            <li className="flex items-center">
+              <span className="text-primary mr-2">✓</span>
+              <span>Supporto clienti dedicato</span>
+            </li>
+          </ul>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center">
+          <Button 
+            size="lg"
+            onClick={handleGetStarted}
+            className="text-lg px-8 py-6"
+          >
+            Inizia a Gestire la Tua Pizzeria
+          </Button>
+        </div>
       </div>
     </div>
   );

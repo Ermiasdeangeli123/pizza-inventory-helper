@@ -5,23 +5,16 @@ import { cn } from "@/lib/utils";
 const Navigation = () => {
   const location = useLocation();
 
+  // Don't show navigation on landing page
+  if (location.pathname === "/landing") {
+    return null;
+  }
+
   return (
     <div className="border-b mb-6">
       <div className="max-w-7xl mx-auto px-4 py-2">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link to="/landing">
-                <NavigationMenuLink
-                  className={cn(
-                    "px-4 py-2 hover:bg-accent rounded-md transition-colors",
-                    location.pathname === "/landing" && "bg-accent"
-                  )}
-                >
-                  Prodotti
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
             <NavigationMenuItem>
               <Link to="/">
                 <NavigationMenuLink
