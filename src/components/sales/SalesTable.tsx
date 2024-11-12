@@ -10,11 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// Update the type to make count required
-type PizzaWithCount = Pizza & { count: number };
-
 interface SalesTableProps {
-  pizzas: PizzaWithCount[];
+  pizzas: Pizza[];
   onIncrement: (id: string) => void;
   onDecrement: (id: string) => void;
 }
@@ -36,8 +33,8 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
           <TableRow key={pizza.id}>
             <TableCell className="font-medium">{pizza.name}</TableCell>
             <TableCell>€{pizza.price.toFixed(2)}</TableCell>
-            <TableCell>{pizza.count}</TableCell>
-            <TableCell>€{(pizza.price * pizza.count).toFixed(2)}</TableCell>
+            <TableCell>{pizza.count || 0}</TableCell>
+            <TableCell>€{(pizza.price * (pizza.count || 0)).toFixed(2)}</TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
                 <Button
@@ -49,7 +46,7 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
                 </Button>
                 <Input
                   type="number"
-                  value={pizza.count}
+                  value={pizza.count || 0}
                   className="w-20 text-center"
                   readOnly
                 />
