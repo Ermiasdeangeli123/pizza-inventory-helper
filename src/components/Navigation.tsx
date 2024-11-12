@@ -17,6 +17,7 @@ const Navigation = () => {
   }
 
   const menuItems = [
+    { path: "/dashboard", label: "Dashboard" },
     { path: "/profits", label: "Profitti" },
     { path: "/inventory", label: "Inventario" },
     { path: "/sales", label: "Vendite" },
