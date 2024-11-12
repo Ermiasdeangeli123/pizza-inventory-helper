@@ -1,0 +1,44 @@
+import { Link, useLocation } from "react-router-dom";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+
+const Navigation = () => {
+  const location = useLocation();
+
+  return (
+    <div className="border-b mb-6">
+      <div className="max-w-7xl mx-auto px-4 py-2">
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link to="/">
+                <NavigationMenuLink
+                  className={cn(
+                    "px-4 py-2 hover:bg-accent rounded-md transition-colors",
+                    location.pathname === "/" && "bg-accent"
+                  )}
+                >
+                  Inventario
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/sales">
+                <NavigationMenuLink
+                  className={cn(
+                    "px-4 py-2 hover:bg-accent rounded-md transition-colors",
+                    location.pathname === "/sales" && "bg-accent"
+                  )}
+                >
+                  Vendite
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+    </div>
+  );
+};
+
+export default Navigation;
