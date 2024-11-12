@@ -9,6 +9,8 @@ import Sales from "./pages/Sales";
 import Menu from "./pages/Menu";
 import Profits from "./pages/Profits";
 import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
         <Navigation />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/inventory" element={<Index />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/menu" element={<Menu />} />
