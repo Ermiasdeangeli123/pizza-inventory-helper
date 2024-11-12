@@ -19,9 +19,16 @@ interface CategorySectionProps {
   items: InventoryItem[];
   onUpdateQuantity: (id: string, change: number) => void;
   onAddItem: (item: Omit<InventoryItem, "id">) => void;
+  onUpdateCost: (id: string, newCost: number) => void;
 }
 
-const CategorySection = ({ category, items, onUpdateQuantity, onAddItem }: CategorySectionProps) => {
+const CategorySection = ({ 
+  category, 
+  items, 
+  onUpdateQuantity, 
+  onAddItem,
+  onUpdateCost 
+}: CategorySectionProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newItemName, setNewItemName] = useState("");
   const [newItemQuantity, setNewItemQuantity] = useState("");
@@ -63,7 +70,7 @@ const CategorySection = ({ category, items, onUpdateQuantity, onAddItem }: Categ
       unit: newItemUnit,
       minStock,
       costPerUnit,
-      initialQuantity: quantity  // Add initialQuantity equal to the initial quantity
+      initialQuantity: quantity
     });
 
     setNewItemName("");
@@ -157,6 +164,7 @@ const CategorySection = ({ category, items, onUpdateQuantity, onAddItem }: Categ
             key={item.id}
             item={item}
             onUpdateQuantity={onUpdateQuantity}
+            onUpdateCost={onUpdateCost}
           />
         ))}
       </div>

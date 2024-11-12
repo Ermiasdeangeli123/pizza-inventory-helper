@@ -1,12 +1,11 @@
 import { useState } from "react";
-import SearchBar from "@/components/SearchBar";
-import CategorySection from "@/components/CategorySection";
 import { categories, initialInventory } from "@/lib/data";
 import type { InventoryItem } from "@/lib/data";
+import CategorySection from "@/components/CategorySection";
+import { v4 as uuidv4 } from "uuid";
 
 const Index = () => {
   const [inventory, setInventory] = useState<InventoryItem[]>(initialInventory);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const handleUpdateQuantity = (id: string, change: number) => {
     setInventory((prev) =>
@@ -16,35 +15,34 @@ const Index = () => {
     );
   };
 
-  const handleAddItem = (newItem: Omit<InventoryItem, "id">) => {
-    const id = newItem.name.toLowerCase().replace(/\s+/g, '-');
-    setInventory((prev) => [...prev, { ...newItem, id }]);
+  const handleUpdateCost = (id: string, newCost: number) => {
+    setInventory((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, costPerUnit: newCost } : item
+      )
+    );
   };
 
-  const filteredInventory = inventory.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const itemsByCategory = categories.map((category) => ({
-    ...category,
-    items: filteredInventory.filter((item) => item.category === category.id),
-  }));
+  const handleAddItem = (newItem: Omit<InventoryItem, "id">) => {
+    const itemWithId = { ...newItem, id: uuidv4() };
+    setInventory((prev) => [...prev, itemWithId]);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">Inventario Pizzeria</h1>
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Inventario</h1>
         </div>
 
-        {itemsByCategory.map((category) => (
+        {categories.map((category) => (
           <CategorySection
             key={category.id}
             category={category}
-            items={category.items}
+            items={inventory.filter((item) => item.category === category.id)}
             onUpdateQuantity={handleUpdateQuantity}
             onAddItem={handleAddItem}
+            onUpdateCost={handleUpdateCost}
           />
         ))}
       </div>
