@@ -13,16 +13,10 @@ import {
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import MenuTable from "@/components/menu/MenuTable";
-import { Pizza } from "@/types/menu";
+import { usePizzaStore } from "@/queries/pizzaQueries";
 
 const Menu = () => {
-  const [pizzas, setPizzas] = useState<Pizza[]>([
-    { id: "margherita", name: "Margherita", price: 8 },
-    { id: "marinara", name: "Marinara", price: 7 },
-    { id: "diavola", name: "Diavola", price: 9 },
-    { id: "capricciosa", name: "Capricciosa", price: 10 },
-    { id: "quattro-formaggi", name: "4 Formaggi", price: 11 },
-  ]);
+  const { pizzas, addPizza, updatePizza, deletePizza } = usePizzaStore();
   const [newPizzaName, setNewPizzaName] = useState("");
   const [newPizzaPrice, setNewPizzaPrice] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -39,29 +33,17 @@ const Menu = () => {
       return;
     }
 
-    const newPizza: Pizza = {
+    const newPizza = {
       id: newPizzaName.toLowerCase().replace(/\s+/g, "-"),
       name: newPizzaName,
       price: price,
     };
 
-    setPizzas((prev) => [...prev, newPizza]);
+    addPizza(newPizza);
     setNewPizzaName("");
     setNewPizzaPrice("");
     setIsDialogOpen(false);
     toast.success("Pizza aggiunta con successo");
-  };
-
-  const handleUpdatePizza = (id: string, updates: Partial<Pizza>) => {
-    setPizzas((prev) =>
-      prev.map((pizza) =>
-        pizza.id === id ? { ...pizza, ...updates } : pizza
-      )
-    );
-  };
-
-  const handleDeletePizza = (id: string) => {
-    setPizzas((prev) => prev.filter((pizza) => pizza.id !== id));
   };
 
   return (
@@ -111,8 +93,8 @@ const Menu = () => {
         <Card className="p-6">
           <MenuTable
             pizzas={pizzas}
-            onUpdatePizza={handleUpdatePizza}
-            onDeletePizza={handleDeletePizza}
+            onUpdatePizza={updatePizza}
+            onDeletePizza={deletePizza}
           />
         </Card>
       </div>
