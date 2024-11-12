@@ -46,6 +46,18 @@ const Navigation = () => {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/profits">
+                <NavigationMenuLink
+                  className={cn(
+                    "px-4 py-2 hover:bg-accent rounded-md transition-colors",
+                    location.pathname === "/profits" && "bg-accent"
+                  )}
+                >
+                  Profitti
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
