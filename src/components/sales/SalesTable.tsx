@@ -22,7 +22,6 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
       <TableHeader>
         <TableRow>
           <TableHead>Pizza</TableHead>
-          <TableHead>Prezzo</TableHead>
           <TableHead>Vendute</TableHead>
           <TableHead>Totale</TableHead>
           <TableHead>Azioni</TableHead>
@@ -32,7 +31,6 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
         {pizzas.map((pizza) => (
           <TableRow key={pizza.id}>
             <TableCell className="font-medium">{pizza.name}</TableCell>
-            <TableCell>€{pizza.price.toFixed(2)}</TableCell>
             <TableCell>{pizza.count || 0}</TableCell>
             <TableCell>€{(pizza.price * (pizza.count || 0)).toFixed(2)}</TableCell>
             <TableCell>
