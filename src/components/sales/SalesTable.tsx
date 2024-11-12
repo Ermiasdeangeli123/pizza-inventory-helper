@@ -10,8 +10,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+// Update the type to make count required
+type PizzaWithCount = Pizza & { count: number };
+
 interface SalesTableProps {
-  pizzas: (Pizza & { count: number })[];
+  pizzas: PizzaWithCount[];
   onIncrement: (id: string) => void;
   onDecrement: (id: string) => void;
 }

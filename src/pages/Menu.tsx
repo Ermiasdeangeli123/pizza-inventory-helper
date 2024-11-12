@@ -37,6 +37,7 @@ const Menu = () => {
       id: newPizzaName.toLowerCase().replace(/\s+/g, "-"),
       name: newPizzaName,
       price: price,
+      ingredients: [] // Add empty ingredients array as default
     };
 
     addPizza(newPizza);
