@@ -16,6 +16,11 @@ const Index = () => {
     );
   };
 
+  const handleAddItem = (newItem: Omit<InventoryItem, "id">) => {
+    const id = newItem.name.toLowerCase().replace(/\s+/g, '-');
+    setInventory((prev) => [...prev, { ...newItem, id }]);
+  };
+
   const filteredInventory = inventory.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -39,6 +44,7 @@ const Index = () => {
             category={category}
             items={category.items}
             onUpdateQuantity={handleUpdateQuantity}
+            onAddItem={handleAddItem}
           />
         ))}
       </div>
