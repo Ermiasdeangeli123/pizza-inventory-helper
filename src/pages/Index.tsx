@@ -3,14 +3,15 @@ import { categories } from "@/lib/data";
 import CategorySection from "@/components/CategorySection";
 import { useInventory, useUpdateInventory, useAddInventoryItem } from "@/queries/inventoryQueries";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { InventoryItem } from "@/lib/data";
 
 const Index = () => {
-  const { data: inventory, isLoading } = useInventory();
+  const { data: inventoryData, isLoading } = useInventory();
   const updateInventory = useUpdateInventory();
   const addInventoryItem = useAddInventoryItem();
 
   const handleUpdateQuantity = (id: string, change: number) => {
-    const item = inventory?.find((i) => i.id === id);
+    const item = inventoryData?.find((i) => i.id === id);
     if (!item) return;
     
     updateInventory.mutate({
@@ -29,6 +30,25 @@ const Index = () => {
   const handleAddItem = (newItem: any) => {
     addInventoryItem.mutate(newItem);
   };
+
+  // Transform the inventory data to match our InventoryItem type
+  const inventory: InventoryItem[] = inventoryData?.map(item => ({
+    id: item.id,
+    name: item.name,
+    category: item.category_id || '',
+    category_id: item.category_id,
+    quantity: item.quantity,
+    unit: item.unit,
+    minStock: item.min_stock,
+    min_stock: item.min_stock,
+    costPerUnit: item.cost_per_unit,
+    cost_per_unit: item.cost_per_unit,
+    initialQuantity: item.initial_quantity,
+    initial_quantity: item.initial_quantity,
+    created_at: item.created_at,
+    updated_at: item.updated_at,
+    user_id: item.user_id
+  })) || [];
 
   if (isLoading) {
     return (
@@ -56,7 +76,7 @@ const Index = () => {
           <CategorySection
             key={category.id}
             category={category}
-            items={inventory?.filter((item) => item.category_id === category.id) || []}
+            items={inventory.filter((item) => item.category_id === category.id)}
             onUpdateQuantity={handleUpdateQuantity}
             onAddItem={handleAddItem}
             onUpdateCost={handleUpdateCost}

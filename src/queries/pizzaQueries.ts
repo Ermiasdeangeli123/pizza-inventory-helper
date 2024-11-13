@@ -1,4 +1,3 @@
-import { create } from "zustand";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@supabase/auth-helpers-react";
@@ -39,19 +38,23 @@ export const useAddPizza = () => {
     mutationFn: async (pizza: Omit<Pizza, "id">) => {
       const { data: pizzaData, error: pizzaError } = await supabase
         .from("pizzas")
-        .insert([{ ...pizza, user_id: userId }])
+        .insert([{ 
+          name: pizza.name,
+          price: pizza.price,
+          user_id: userId 
+        }])
         .select()
         .single();
 
       if (pizzaError) throw pizzaError;
 
-      if (pizza.ingredients?.length) {
+      if (pizza.pizza_ingredients?.length) {
         const { error: ingredientsError } = await supabase
           .from("pizza_ingredients")
           .insert(
-            pizza.ingredients.map((ing) => ({
+            pizza.pizza_ingredients.map((ing) => ({
               pizza_id: pizzaData.id,
-              ingredient_id: ing.ingredientId,
+              ingredient_id: ing.ingredient_id,
               quantity: ing.quantity,
               user_id: userId,
             }))

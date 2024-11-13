@@ -2,11 +2,11 @@ export type Pizza = {
   id: string;
   name: string;
   price: number;
-  count?: number;
   created_at?: string;
   updated_at?: string;
   user_id?: string;
   pizza_ingredients?: PizzaIngredient[];
+  count?: number; // For UI purposes
 };
 
 export type PizzaIngredient = {
@@ -26,13 +26,17 @@ export type PizzaIngredient = {
 export type InventoryItem = {
   id: string;
   name: string;
-  category_id: string;
+  category: string;
+  category_id?: string;
   quantity: number;
   unit: string;
-  min_stock: number;
-  cost_per_unit: number;
-  initial_quantity: number;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
+  minStock: number;
+  min_stock?: number;
+  costPerUnit: number;
+  cost_per_unit?: number;
+  initialQuantity: number;
+  initial_quantity?: number;
+  created_at?: string;
+  updated_at?: string;
+  user_id?: string;
 };
