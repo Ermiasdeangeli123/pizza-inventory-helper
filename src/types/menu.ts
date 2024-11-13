@@ -20,6 +20,7 @@ export type PizzaIngredient = {
     id: string;
     name: string;
     cost_per_unit: number;
+    unit: string;
   };
 };
 

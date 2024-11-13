@@ -16,12 +16,15 @@ import MenuTable from "@/components/menu/MenuTable";
 import { usePizzas, useAddPizza, useUpdatePizza, useDeletePizza } from "@/queries/pizzaQueries";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Pizza } from "@/types/menu";
+import { supabase } from "@/integrations/supabase/client";
+import { useSession } from "@supabase/auth-helpers-react";
 
 const Menu = () => {
   const { data: pizzas, isLoading } = usePizzas();
   const addPizza = useAddPizza();
   const updatePizza = useUpdatePizza();
   const deletePizza = useDeletePizza();
+  const session = useSession();
   const [newPizzaName, setNewPizzaName] = useState("");
   const [newPizzaPrice, setNewPizzaPrice] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -47,6 +50,38 @@ const Menu = () => {
     setNewPizzaName("");
     setNewPizzaPrice("");
     setIsDialogOpen(false);
+  };
+
+  const handleUpdateRecipe = async (pizzaId: string, ingredients: Array<{ ingredient_id: string; quantity: number }>) => {
+    try {
+      // First, delete existing ingredients
+      const { error: deleteError } = await supabase
+        .from('pizza_ingredients')
+        .delete()
+        .eq('pizza_id', pizzaId);
+
+      if (deleteError) throw deleteError;
+
+      // Then insert new ingredients
+      const { error: insertError } = await supabase
+        .from('pizza_ingredients')
+        .insert(
+          ingredients.map(ing => ({
+            pizza_id: pizzaId,
+            ingredient_id: ing.ingredient_id,
+            quantity: ing.quantity,
+            user_id: session?.user?.id
+          }))
+        );
+
+      if (insertError) throw insertError;
+
+      // Refresh pizzas data
+      usePizzas().refetch();
+    } catch (error) {
+      console.error('Error updating recipe:', error);
+      toast.error("Errore nel salvataggio della ricetta");
+    }
   };
 
   if (isLoading) {
@@ -124,6 +159,7 @@ const Menu = () => {
             pizzas={transformedPizzas}
             onUpdatePizza={(id, updates) => updatePizza.mutate({ id, updates })}
             onDeletePizza={(id) => deletePizza.mutate(id)}
+            onUpdateRecipe={handleUpdateRecipe}
           />
         </Card>
       </div>
