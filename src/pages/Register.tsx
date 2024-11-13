@@ -30,7 +30,14 @@ const Register = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('email_address_not_authorized')) {
+          toast.error("Durante lo sviluppo, è necessario autorizzare il dominio email nella console Supabase. Per favore, contatta l'amministratore.");
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
 
       toast.success("Registrazione completata con successo!");
       navigate("/profits");
