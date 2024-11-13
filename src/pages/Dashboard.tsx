@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format, startOfWeek, eachDayOfInterval, endOfWeek } from "date-fns";
 import { it } from 'date-fns/locale';
-import { Line } from "recharts";
+import { Line, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 const Dashboard = () => {
@@ -134,21 +134,20 @@ const Dashboard = () => {
               }
             }}
           >
-            {({ CartesianGrid, XAxis, YAxis }) => (
-              <>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <ChartTooltip />
-                <Line 
-                  type="monotone" 
-                  dataKey="sales" 
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-              </>
-            )}
+            <>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <ChartTooltip />
+              <Line 
+                type="monotone" 
+                dataKey="sales" 
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+                data={salesData}
+              />
+            </>
           </ChartContainer>
         </CardContent>
       </Card>
