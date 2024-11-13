@@ -1,13 +1,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePizzas } from "@/queries/pizzaQueries";
-import { initialInventory } from "@/lib/data";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Euro, Package, TrendingUp, AlertTriangle } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Dashboard = () => {
   const { data: pizzas = [] } = usePizzas();
   const { data: sales = [] } = useSales();
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('inventory')
+        .select('*');
+      if (error) throw error;
+      return data || [];
+    }
+  });
 
   // Calculate total revenue from sales
   const totalRevenue = sales.reduce((acc, sale) => {
@@ -18,8 +29,8 @@ const Dashboard = () => {
   const totalPizzasSold = sales.reduce((acc, sale) => acc + sale.quantity, 0);
 
   // Find low stock items
-  const lowStockItems = initialInventory.filter(
-    item => item.quantity <= item.minStock
+  const lowStockItems = inventory.filter(
+    item => item.quantity <= item.min_stock
   );
 
   // Calculate costs from ingredients used
@@ -34,7 +45,7 @@ const Dashboard = () => {
     return acc + (pizzaCost * sale.quantity);
   }, 0);
 
-  // Sample data for the chart (in a real app, this would come from your backend)
+  // Sample data for the chart
   const salesData = [
     { name: 'Lun', sales: 4 },
     { name: 'Mar', sales: 3 },

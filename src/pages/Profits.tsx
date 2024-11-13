@@ -2,11 +2,22 @@ import { Card } from "@/components/ui/card";
 import { EuroIcon, TrendingUpIcon, TrendingDownIcon } from "lucide-react";
 import { usePizzas } from "@/queries/pizzaQueries";
 import { useSales } from "@/queries/salesQueries";
-import { initialInventory } from "@/lib/data";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Profits = () => {
   const { data: pizzas = [] } = usePizzas();
   const { data: sales = [] } = useSales();
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('inventory')
+        .select('*');
+      if (error) throw error;
+      return data || [];
+    }
+  });
 
   // Calculate total sales using sales data
   const totalRevenue = sales.reduce((acc, sale) => {
@@ -19,9 +30,9 @@ const Profits = () => {
     if (!pizza) return acc;
     
     const pizzaCost = (pizza.pizza_ingredients || []).reduce((ingredientAcc, ingredient) => {
-      const inventoryItem = initialInventory.find(item => item.id === ingredient.ingredient_id);
+      const inventoryItem = inventory.find(item => item.id === ingredient.ingredient_id);
       if (!inventoryItem) return ingredientAcc;
-      return ingredientAcc + (ingredient.quantity * inventoryItem.costPerUnit);
+      return ingredientAcc + (ingredient.quantity * inventoryItem.cost_per_unit);
     }, 0);
     
     return acc + (pizzaCost * sale.quantity);
