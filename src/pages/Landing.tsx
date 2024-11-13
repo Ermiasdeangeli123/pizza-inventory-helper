@@ -1,14 +1,23 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Logo from "@/components/Logo";
+import { useState } from "react";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
 
   const handleGetStarted = () => {
     toast.success("Benvenuto! Iniziamo a gestire la tua pizzeria.");
     navigate("/register");
+  };
+
+  const handleWaitlistSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Grazie! Ti contatteremo presto per la demo.");
+    setEmail("");
   };
 
   return (
@@ -20,17 +29,36 @@ const Landing = () => {
             <Logo />
           </div>
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-            Gestisci la Tua Pizzeria con Facilità
+            Rivoluziona la Gestione della Tua Pizzeria
           </h1>
           <p className="text-xl text-orange-900/70 mb-8">
-            La soluzione completa per gestire inventario, costi e profitti della tua pizzeria
+            Scopri come Pizzalova può trasformare la tua attività con una gestione intelligente di inventario, costi e profitti
           </p>
+          
+          {/* Waitlist Form */}
+          <div className="max-w-md mx-auto mb-8 p-6 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border border-orange-100">
+            <h3 className="text-xl font-semibold mb-4 text-red-700">Richiedi una Demo Gratuita</h3>
+            <form onSubmit={handleWaitlistSubmit} className="space-y-4">
+              <Input
+                type="email"
+                placeholder="La tua email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full"
+              />
+              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700">
+                Unisciti alla Waitlist
+              </Button>
+            </form>
+          </div>
+
           <Button 
             size="lg"
             onClick={handleGetStarted}
             className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
           >
-            Inizia Ora
+            Prova la Demo
           </Button>
         </div>
 
@@ -58,7 +86,7 @@ const Landing = () => {
 
         {/* Benefits Section */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-red-800">Perché Scegliere PizzaBot?</h2>
+          <h2 className="text-3xl font-bold mb-8 text-red-800">Perché Scegliere Pizzalova?</h2>
           <ul className="space-y-4 text-left">
             <li className="flex items-center">
               <span className="text-red-600 mr-2">✓</span>
@@ -86,7 +114,7 @@ const Landing = () => {
             onClick={handleGetStarted}
             className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
           >
-            Inizia a Gestire la Tua Pizzeria
+            Prova la Demo Gratuita
           </Button>
         </div>
       </div>
