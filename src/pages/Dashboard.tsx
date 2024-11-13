@@ -118,7 +118,7 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      <Card className="col-span-4">
+      <Card>
         <CardHeader>
           <CardTitle>Vendite Settimanali</CardTitle>
         </CardHeader>
@@ -134,20 +134,22 @@ const Dashboard = () => {
               }
             }}
           >
-            <>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <ChartTooltip />
-              <Line 
-                type="monotone" 
-                dataKey="sales" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-                data={salesData}
-              />
-            </>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="name"
+              type="category"
+              allowDuplicatedCategory={false}
+            />
+            <YAxis />
+            <ChartTooltip />
+            <Line 
+              data={salesData}
+              type="monotone" 
+              dataKey="sales" 
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
           </ChartContainer>
         </CardContent>
       </Card>
