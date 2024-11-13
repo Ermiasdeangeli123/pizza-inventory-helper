@@ -5,6 +5,8 @@ import { Euro, Package, TrendingUp, AlertTriangle } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { format, startOfWeek, eachDayOfInterval, endOfWeek } from "date-fns";
+import { it } from 'date-fns/locale';
 
 const Dashboard = () => {
   const { data: pizzas = [] } = usePizzas();
@@ -45,16 +47,29 @@ const Dashboard = () => {
     return acc + (pizzaCost * sale.quantity);
   }, 0);
 
-  // Sample data for the chart
-  const salesData = [
-    { name: 'Lun', sales: 4 },
-    { name: 'Mar', sales: 3 },
-    { name: 'Mer', sales: 6 },
-    { name: 'Gio', sales: 4 },
-    { name: 'Ven', sales: 8 },
-    { name: 'Sab', sales: 10 },
-    { name: 'Dom', sales: 7 },
-  ];
+  // Prepare data for the chart
+  const today = new Date();
+  const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Start from Monday
+  const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
+  
+  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+  
+  const salesData = weekDays.map(day => {
+    const dayStart = new Date(day.setHours(0, 0, 0, 0));
+    const dayEnd = new Date(day.setHours(23, 59, 59, 999));
+    
+    const daySales = sales.filter(sale => {
+      const saleDate = new Date(sale.created_at);
+      return saleDate >= dayStart && saleDate <= dayEnd;
+    });
+
+    const totalSales = daySales.reduce((acc, sale) => acc + sale.quantity, 0);
+
+    return {
+      name: format(day, 'EEE', { locale: it }), // Italian day abbreviation
+      sales: totalSales
+    };
+  });
 
   return (
     <div className="p-6 space-y-6">
@@ -113,7 +128,14 @@ const Dashboard = () => {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="sales" stroke="#8884d8" />
+              <Line 
+                type="monotone" 
+                dataKey="sales" 
+                stroke="#8884d8" 
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
