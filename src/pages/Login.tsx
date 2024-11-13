@@ -4,14 +4,34 @@ import { Card } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Login effettuato con successo!");
-    navigate("/profits");
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      toast.success("Login effettuato con successo!");
+      navigate("/profits");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -22,12 +42,26 @@ const Login = () => {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Input type="email" placeholder="Email" required />
+            <Input 
+              type="email" 
+              placeholder="Email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
           </div>
           <div>
-            <Input type="password" placeholder="Password" required />
+            <Input 
+              type="password" 
+              placeholder="Password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
           </div>
-          <Button type="submit" className="w-full">Accedi</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Accesso in corso..." : "Accedi"}
+          </Button>
         </form>
         <p className="text-center mt-4 text-sm text-gray-600">
           Non hai un account?{" "}

@@ -6,8 +6,15 @@ import { Button } from "./ui/button";
 import { LogOut, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
-const Navigation = () => {
+interface NavigationProps {
+  session: Session | null;
+}
+
+const Navigation = ({ session }: NavigationProps) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,6 +22,11 @@ const Navigation = () => {
   if (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/register") {
     return null;
   }
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Logout effettuato con successo");
+  };
 
   const menuItems = [
     { path: "/dashboard", label: "Dashboard" },
@@ -75,7 +87,7 @@ const Navigation = () => {
                   </NavigationMenu>
                   <Button 
                     variant="ghost" 
-                    onClick={() => window.location.href = "/login"}
+                    onClick={handleLogout}
                     className="justify-start px-4"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
@@ -88,7 +100,7 @@ const Navigation = () => {
 
           {/* Desktop Logout Button */}
           <div className="hidden md:block">
-            <Button variant="ghost" onClick={() => window.location.href = "/login"}>
+            <Button variant="ghost" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Esci
             </Button>

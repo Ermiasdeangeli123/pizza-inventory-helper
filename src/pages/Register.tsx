@@ -4,14 +4,41 @@ import { Card } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Registrazione completata con successo!");
-    navigate("/profits");
+    setLoading(true);
+
+    if (password !== confirmPassword) {
+      toast.error("Le password non coincidono");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      toast.success("Registrazione completata con successo!");
+      navigate("/profits");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -22,18 +49,35 @@ const Register = () => {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Input type="text" placeholder="Nome" required />
+            <Input 
+              type="email" 
+              placeholder="Email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
           </div>
           <div>
-            <Input type="email" placeholder="Email" required />
+            <Input 
+              type="password" 
+              placeholder="Password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
           </div>
           <div>
-            <Input type="password" placeholder="Password" required />
+            <Input 
+              type="password" 
+              placeholder="Conferma Password" 
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required 
+            />
           </div>
-          <div>
-            <Input type="password" placeholder="Conferma Password" required />
-          </div>
-          <Button type="submit" className="w-full">Registrati</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Registrazione in corso..." : "Registrati"}
+          </Button>
         </form>
         <p className="text-center mt-4 text-sm text-gray-600">
           Hai già un account?{" "}
