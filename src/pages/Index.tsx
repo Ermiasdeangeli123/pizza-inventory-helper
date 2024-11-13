@@ -27,9 +27,32 @@ const Index = () => {
     });
   };
 
-  const handleAddItem = (newItem: any) => {
-    addInventoryItem.mutate(newItem);
+  const handleAddItem = (newItem: Omit<InventoryItem, "id">) => {
+    addInventoryItem.mutate({
+      name: newItem.name,
+      category_id: newItem.category,
+      quantity: newItem.quantity,
+      unit: newItem.unit,
+      min_stock: newItem.minStock,
+      cost_per_unit: newItem.costPerUnit,
+      initial_quantity: newItem.quantity
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <Skeleton className="h-8 w-48" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Transform the inventory data to match our InventoryItem type
   const inventory: InventoryItem[] = inventoryData?.map(item => ({
@@ -50,21 +73,6 @@ const Index = () => {
     user_id: item.user_id
   })) || [];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <Skeleton className="h-8 w-48" />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Skeleton className="h-32" />
-            <Skeleton className="h-32" />
-            <Skeleton className="h-32" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -76,7 +84,7 @@ const Index = () => {
           <CategorySection
             key={category.id}
             category={category}
-            items={inventory.filter((item) => item.category_id === category.id)}
+            items={inventory.filter((item) => item.category === category.id)}
             onUpdateQuantity={handleUpdateQuantity}
             onAddItem={handleAddItem}
             onUpdateCost={handleUpdateCost}
