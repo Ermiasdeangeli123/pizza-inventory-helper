@@ -28,19 +28,22 @@ const Register = () => {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/profits`
+        }
       });
 
       if (error) {
-        if (error.message.includes('email_address_not_authorized')) {
-          toast.error("Durante lo sviluppo, è necessario autorizzare il dominio email nella console Supabase. Per favore, contatta l'amministratore.");
+        if (error.message.includes('email') || error.message.includes('Email')) {
+          toast.error("Per lo sviluppo, è necessario abilitare la registrazione nella console Supabase. Vai su Authentication > Settings e disabilita 'Confirm email'.");
         } else {
           toast.error(error.message);
         }
         return;
       }
 
-      toast.success("Registrazione completata con successo!");
-      navigate("/profits");
+      toast.success("Registrazione completata con successo! Controlla la tua email per confermare.");
+      navigate("/login");
     } catch (error: any) {
       toast.error(error.message);
     } finally {
