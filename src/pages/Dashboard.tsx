@@ -1,12 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePizzas } from "@/queries/pizzaQueries";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Euro, Package, TrendingUp, AlertTriangle } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format, startOfWeek, eachDayOfInterval, endOfWeek } from "date-fns";
 import { it } from 'date-fns/locale';
+import { Line } from "recharts";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 const Dashboard = () => {
   const { data: pizzas = [] } = usePizzas();
@@ -122,22 +123,33 @@ const Dashboard = () => {
           <CardTitle>Vendite Settimanali</CardTitle>
         </CardHeader>
         <CardContent className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={salesData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Line 
-                type="monotone" 
-                dataKey="sales" 
-                stroke="#8884d8" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <ChartContainer
+            config={{
+              sales: {
+                label: "Vendite",
+                theme: {
+                  light: "#8884d8",
+                  dark: "#8884d8"
+                }
+              }
+            }}
+          >
+            {({ CartesianGrid, XAxis, YAxis }) => (
+              <>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <ChartTooltip />
+                <Line 
+                  type="monotone" 
+                  dataKey="sales" 
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </>
+            )}
+          </ChartContainer>
         </CardContent>
       </Card>
     </div>
