@@ -1,29 +1,29 @@
 import { Card } from "@/components/ui/card";
 import { EuroIcon, TrendingUpIcon, TrendingDownIcon } from "lucide-react";
-import { usePizzaStore } from "@/queries/pizzaQueries";
+import { usePizzas } from "@/queries/pizzaQueries";
 import { initialInventory } from "@/lib/data";
 
 const Profits = () => {
-  const { pizzas } = usePizzaStore();
+  const { data: pizzas = [] } = usePizzas();
 
-  // Calcola il totale delle vendite
+  // Calculate total sales
   const totalRevenue = pizzas.reduce((acc, pizza) => {
     const count = pizza.count || 0;
     return acc + pizza.price * count;
   }, 0);
 
-  // Calcola il costo totale degli ingredienti utilizzati
+  // Calculate total costs of ingredients used
   const totalCosts = pizzas.reduce((acc, pizza) => {
     const count = pizza.count || 0;
-    const pizzaCost = pizza.ingredients.reduce((ingredientAcc, ingredient) => {
-      const inventoryItem = initialInventory.find(item => item.id === ingredient.ingredientId);
+    const pizzaCost = (pizza.pizza_ingredients || []).reduce((ingredientAcc, ingredient) => {
+      const inventoryItem = initialInventory.find(item => item.id === ingredient.ingredient_id);
       if (!inventoryItem) return ingredientAcc;
       return ingredientAcc + (ingredient.quantity * inventoryItem.costPerUnit);
     }, 0);
     return acc + (pizzaCost * count);
   }, 0);
 
-  // Calcola il profitto
+  // Calculate profit
   const profit = totalRevenue - totalCosts;
 
   return (

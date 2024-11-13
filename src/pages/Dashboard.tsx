@@ -1,15 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePizzaStore } from "@/queries/pizzaQueries";
+import { usePizzas } from "@/queries/pizzaQueries";
 import { initialInventory } from "@/lib/data";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Euro, Package, TrendingUp, AlertTriangle } from "lucide-react";
 
 const Dashboard = () => {
-  const { pizzas } = usePizzaStore();
+  const { data: pizzas = [] } = usePizzas();
 
   // Calculate total revenue
   const totalRevenue = pizzas.reduce((acc, pizza) => {
-    return acc + (pizza.price * (pizza.count || 0));
+    const count = pizza.count || 0;
+    return acc + pizza.price * count;
   }, 0);
 
   // Calculate total pizzas sold
@@ -23,8 +24,8 @@ const Dashboard = () => {
   // Calculate costs from ingredients used
   const totalCosts = pizzas.reduce((acc, pizza) => {
     const count = pizza.count || 0;
-    const pizzaCost = pizza.ingredients.reduce((ingredientAcc, ingredient) => {
-      const inventoryItem = initialInventory.find(item => item.id === ingredient.ingredientId);
+    const pizzaCost = (pizza.pizza_ingredients || []).reduce((ingredientAcc, ingredient) => {
+      const inventoryItem = initialInventory.find(item => item.id === ingredient.ingredient_id);
       if (!inventoryItem) return ingredientAcc;
       return ingredientAcc + (ingredient.quantity * inventoryItem.costPerUnit);
     }, 0);

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import MenuTable from "@/components/menu/MenuTable";
 import { usePizzas, useAddPizza, useUpdatePizza, useDeletePizza } from "@/queries/pizzaQueries";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Pizza } from "@/types/menu";
 
 const Menu = () => {
   const { data: pizzas, isLoading } = usePizzas();

@@ -4,6 +4,7 @@ import SalesTable from "@/components/sales/SalesTable";
 import { usePizzas } from "@/queries/pizzaQueries";
 import { useAddSale } from "@/queries/salesQueries";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Pizza } from "@/types/menu";
 
 const Sales = () => {
   const { data: pizzas, isLoading } = usePizzas();
@@ -91,7 +92,7 @@ const Sales = () => {
 
         <Card>
           <SalesTable
-            pizzas={pizzas || []}
+            pizzas={pizzas as Pizza[] || []}
             onIncrement={handleIncrement}
             onDecrement={handleDecrement}
           />
