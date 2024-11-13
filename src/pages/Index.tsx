@@ -59,18 +59,11 @@ const Index = () => {
     id: item.id,
     name: item.name,
     category: item.category_id || '',
-    category_id: item.category_id,
     quantity: item.quantity,
     unit: item.unit,
     minStock: item.min_stock,
-    min_stock: item.min_stock,
     costPerUnit: item.cost_per_unit,
-    cost_per_unit: item.cost_per_unit,
-    initialQuantity: item.initial_quantity,
-    initial_quantity: item.initial_quantity,
-    created_at: item.created_at,
-    updated_at: item.updated_at,
-    user_id: item.user_id
+    initialQuantity: item.initial_quantity
   })) || [];
 
   return (

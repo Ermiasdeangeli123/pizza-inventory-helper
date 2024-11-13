@@ -36,8 +36,6 @@ const CategorySection = ({
   const [newItemMinStock, setNewItemMinStock] = useState("");
   const [newItemCostPerUnit, setNewItemCostPerUnit] = useState("");
 
-  if (items.length === 0 && !isDialogOpen) return null;
-
   const handleAddNewItem = () => {
     if (!newItemName || !newItemQuantity || !newItemUnit || !newItemMinStock || !newItemCostPerUnit) {
       toast.error("Compila tutti i campi");
