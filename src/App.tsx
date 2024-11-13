@@ -3,14 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { createClient } from '@supabase/supabase-js';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "./components/Navigation";
 import Index from "./pages/Index";
 import Sales from "./pages/Sales";
 import Menu from "./pages/Menu";
-import Profits from "./pages/Profits";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -64,10 +62,6 @@ const App = () => {
               <Route
                 path="/menu"
                 element={session ? <Menu /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/profits"
-                element={session ? <Profits /> : <Navigate to="/login" />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

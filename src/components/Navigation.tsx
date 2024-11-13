@@ -18,7 +18,6 @@ const Navigation = ({ session }: NavigationProps) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Don't show navigation on landing page
   if (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/register") {
     return null;
   }
@@ -30,7 +29,6 @@ const Navigation = ({ session }: NavigationProps) => {
 
   const menuItems = [
     { path: "/dashboard", label: "Dashboard" },
-    { path: "/profits", label: "Profitti" },
     { path: "/inventory", label: "Inventario" },
     { path: "/sales", label: "Vendite" },
     { path: "/menu", label: "Menu" },

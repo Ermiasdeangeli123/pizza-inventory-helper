@@ -1,13 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePizzas } from "@/queries/pizzaQueries";
-import { Euro, Package, TrendingUp, AlertTriangle } from "lucide-react";
+import { Euro, Package, TrendingUp, AlertTriangle, TrendingDown } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format, startOfWeek, eachDayOfInterval, endOfWeek } from "date-fns";
 import { it } from 'date-fns/locale';
 import { Line, CartesianGrid, XAxis, YAxis, ComposedChart, ResponsiveContainer } from "recharts";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 const Dashboard = () => {
   const { data: pizzas = [] } = usePizzas();
@@ -42,15 +41,20 @@ const Dashboard = () => {
     if (!pizza) return acc;
     
     const pizzaCost = (pizza.pizza_ingredients || []).reduce((ingredientAcc, ingredient) => {
-      if (!ingredient.ingredient) return ingredientAcc;
-      return ingredientAcc + (ingredient.quantity * ingredient.ingredient.cost_per_unit);
+      const inventoryItem = inventory.find(item => item.id === ingredient.ingredient_id);
+      if (!inventoryItem) return ingredientAcc;
+      return ingredientAcc + (ingredient.quantity * inventoryItem.cost_per_unit);
     }, 0);
+    
     return acc + (pizzaCost * sale.quantity);
   }, 0);
 
+  // Calculate profit
+  const profit = totalRevenue - totalCosts;
+
   // Prepare data for the chart
   const today = new Date();
-  const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Start from Monday
+  const weekStart = startOfWeek(today, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
   
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
@@ -67,7 +71,7 @@ const Dashboard = () => {
     const totalSales = daySales.reduce((acc, sale) => acc + sale.quantity, 0);
 
     return {
-      name: format(day, 'EEE', { locale: it }), // Italian day abbreviation
+      name: format(day, 'EEE', { locale: it }),
       sales: totalSales
     };
   });
@@ -80,7 +84,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ricavi Totali</CardTitle>
-            <Euro className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">€{totalRevenue.toFixed(2)}</div>
@@ -90,7 +94,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Costi Totali</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingDown className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">€{totalCosts.toFixed(2)}</div>
@@ -99,11 +103,11 @@ const Dashboard = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pizze Vendute</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Profitto</CardTitle>
+            <Euro className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalPizzasSold}</div>
+            <div className="text-2xl font-bold">€{profit.toFixed(2)}</div>
           </CardContent>
         </Card>
 
@@ -122,7 +126,7 @@ const Dashboard = () => {
         <CardHeader>
           <CardTitle>Vendite Settimanali</CardTitle>
         </CardHeader>
-        <CardContent className="h-[400px] w-full">
+        <CardContent className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={salesData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -132,7 +136,6 @@ const Dashboard = () => {
                 allowDuplicatedCategory={false}
               />
               <YAxis />
-              <ChartTooltip />
               <Line 
                 type="monotone" 
                 dataKey="sales" 
