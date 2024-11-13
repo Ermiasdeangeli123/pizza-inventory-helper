@@ -1,52 +1,60 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { EuroIcon, TrendingUpIcon } from "lucide-react";
-import { toast } from "sonner";
-import { usePizzaStore } from "@/queries/pizzaQueries";
 import SalesTable from "@/components/sales/SalesTable";
-import { initialInventory } from "@/lib/data";
+import { usePizzas } from "@/queries/pizzaQueries";
+import { useAddSale } from "@/queries/salesQueries";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Sales = () => {
-  const { pizzas } = usePizzaStore();
-  const [inventory, setInventory] = useState(initialInventory);
-
-  const updateInventory = (pizzaId: string, increment: boolean) => {
-    const pizza = pizzas.find(p => p.id === pizzaId);
-    if (!pizza) return;
-
-    setInventory(prev => prev.map(item => {
-      const pizzaIngredient = pizza.ingredients.find(ing => ing.ingredientId === item.id);
-      if (!pizzaIngredient) return item;
-
-      const quantityChange = increment ? -pizzaIngredient.quantity : pizzaIngredient.quantity;
-      const newQuantity = item.quantity + quantityChange;
-
-      if (newQuantity < 0) {
-        toast.error(`Ingredienti insufficienti per ${item.name}`);
-        return item;
-      }
-
-      return {
-        ...item,
-        quantity: newQuantity
-      };
-    }));
-  };
+  const { data: pizzas, isLoading } = usePizzas();
+  const addSale = useAddSale();
 
   const handleIncrement = (id: string) => {
-    updateInventory(id, true);
+    const pizza = pizzas?.find((p) => p.id === id);
+    if (!pizza) return;
+
+    addSale.mutate({
+      pizzaId: id,
+      quantity: 1,
+      priceAtTime: pizza.price
+    });
   };
 
   const handleDecrement = (id: string) => {
-    updateInventory(id, false);
+    const pizza = pizzas?.find((p) => p.id === id);
+    if (!pizza) return;
+
+    addSale.mutate({
+      pizzaId: id,
+      quantity: -1,
+      priceAtTime: pizza.price
+    });
   };
 
-  const totalRevenue = pizzas.reduce(
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <Skeleton className="h-8 w-48" />
+          <div className="grid gap-6 md:grid-cols-2">
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+          </div>
+          <Skeleton className="h-96" />
+        </div>
+      </div>
+    );
+  }
+
+  const totalRevenue = (pizzas || []).reduce(
     (acc, pizza) => acc + pizza.price * (pizza.count || 0),
     0
   );
 
-  const totalSales = pizzas.reduce((acc, pizza) => acc + (pizza.count || 0), 0);
+  const totalSales = (pizzas || []).reduce(
+    (acc, pizza) => acc + (pizza.count || 0),
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -83,7 +91,7 @@ const Sales = () => {
 
         <Card>
           <SalesTable
-            pizzas={pizzas}
+            pizzas={pizzas || []}
             onIncrement={handleIncrement}
             onDecrement={handleDecrement}
           />

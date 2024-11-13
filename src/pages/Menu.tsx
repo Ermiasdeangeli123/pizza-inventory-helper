@@ -11,12 +11,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import MenuTable from "@/components/menu/MenuTable";
-import { usePizzaStore } from "@/queries/pizzaQueries";
+import { usePizzas, useAddPizza, useUpdatePizza, useDeletePizza } from "@/queries/pizzaQueries";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Menu = () => {
-  const { pizzas, addPizza, updatePizza, deletePizza } = usePizzaStore();
+  const { data: pizzas, isLoading } = usePizzas();
+  const addPizza = useAddPizza();
+  const updatePizza = useUpdatePizza();
+  const deletePizza = useDeletePizza();
   const [newPizzaName, setNewPizzaName] = useState("");
   const [newPizzaPrice, setNewPizzaPrice] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -33,19 +36,36 @@ const Menu = () => {
       return;
     }
 
-    const newPizza = {
-      id: newPizzaName.toLowerCase().replace(/\s+/g, "-"),
+    addPizza.mutate({
       name: newPizzaName,
       price: price,
-      ingredients: [] // Add empty ingredients array as default
-    };
+      ingredients: []
+    });
 
-    addPizza(newPizza);
     setNewPizzaName("");
     setNewPizzaPrice("");
     setIsDialogOpen(false);
-    toast.success("Pizza aggiunta con successo");
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+          <Card className="p-6">
+            <div className="space-y-4">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -93,9 +113,9 @@ const Menu = () => {
 
         <Card className="p-6">
           <MenuTable
-            pizzas={pizzas}
-            onUpdatePizza={updatePizza}
-            onDeletePizza={deletePizza}
+            pizzas={pizzas || []}
+            onUpdatePizza={(id, updates) => updatePizza.mutate({ id, updates })}
+            onDeletePizza={(id) => deletePizza.mutate(id)}
           />
         </Card>
       </div>

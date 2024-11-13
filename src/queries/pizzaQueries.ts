@@ -1,70 +1,124 @@
-import { create } from 'zustand';
-import { Pizza } from '@/types/menu';
+import { create } from "zustand";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
+import type { Pizza } from "@/types/menu";
 
-interface PizzaStore {
-  pizzas: Pizza[];
-  setPizzas: (pizzas: Pizza[]) => void;
-  addPizza: (pizza: Pizza) => void;
-  updatePizza: (id: string, updates: Partial<Pizza>) => void;
-  deletePizza: (id: string) => void;
-  updateSales: (id: string, count: number) => void;
-}
+export const usePizzas = () => {
+  const session = useSession();
+  const userId = session?.user?.id;
 
-export const usePizzaStore = create<PizzaStore>((set) => ({
-  pizzas: [
-    { 
-      id: "margherita", 
-      name: "Margherita", 
-      price: 8,
-      ingredients: [
-        { ingredientId: "flour", quantity: 0.25 },
-        { ingredientId: "mozzarella", quantity: 0.2 },
-        { ingredientId: "tomatoes", quantity: 0.15 },
-        { ingredientId: "oil", quantity: 0.02 },
-      ]
+  return useQuery({
+    queryKey: ["pizzas", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pizzas")
+        .select(`
+          *,
+          pizza_ingredients (
+            *,
+            ingredient:inventory(*)
+          )
+        `)
+        .eq("user_id", userId);
+
+      if (error) throw error;
+      return data;
     },
-    { 
-      id: "marinara", 
-      name: "Marinara", 
-      price: 7,
-      ingredients: [
-        { ingredientId: "flour", quantity: 0.25 },
-        { ingredientId: "tomatoes", quantity: 0.15 },
-        { ingredientId: "oil", quantity: 0.02 },
-      ]
+    enabled: !!userId,
+  });
+};
+
+export const useAddPizza = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: async (pizza: Omit<Pizza, "id">) => {
+      const { data: pizzaData, error: pizzaError } = await supabase
+        .from("pizzas")
+        .insert([{ ...pizza, user_id: userId }])
+        .select()
+        .single();
+
+      if (pizzaError) throw pizzaError;
+
+      if (pizza.ingredients?.length) {
+        const { error: ingredientsError } = await supabase
+          .from("pizza_ingredients")
+          .insert(
+            pizza.ingredients.map((ing) => ({
+              pizza_id: pizzaData.id,
+              ingredient_id: ing.ingredientId,
+              quantity: ing.quantity,
+              user_id: userId,
+            }))
+          );
+
+        if (ingredientsError) throw ingredientsError;
+      }
     },
-    { 
-      id: "diavola", 
-      name: "Diavola", 
-      price: 9,
-      ingredients: [
-        { ingredientId: "flour", quantity: 0.25 },
-        { ingredientId: "mozzarella", quantity: 0.2 },
-        { ingredientId: "tomatoes", quantity: 0.15 },
-        { ingredientId: "salami", quantity: 0.1 },
-        { ingredientId: "oil", quantity: 0.02 },
-      ]
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pizzas"] });
+      toast.success("Pizza aggiunta con successo");
     },
-  ],
-  setPizzas: (pizzas) => set({ pizzas }),
-  addPizza: (pizza) => set((state) => ({ pizzas: [...state.pizzas, pizza] })),
-  updatePizza: (id, updates) =>
-    set((state) => ({
-      pizzas: state.pizzas.map((pizza) =>
-        pizza.id === id ? { ...pizza, ...updates } : pizza
-      ),
-    })),
-  deletePizza: (id) =>
-    set((state) => ({
-      pizzas: state.pizzas.filter((pizza) => pizza.id !== id),
-    })),
-  updateSales: (id, count) => {
-    set((state) => ({
-      pizzas: state.pizzas.map((pizza) =>
-        pizza.id === id ? { ...pizza, count: (pizza.count || 0) + count } : pizza
-      ),
-    }));
-    toast.success("Vendita registrata con successo");
-  },
-}));
+    onError: (error) => {
+      toast.error("Errore nell'aggiunta della pizza");
+      console.error(error);
+    },
+  });
+};
+
+export const useUpdatePizza = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<Pizza> }) => {
+      const { error } = await supabase
+        .from("pizzas")
+        .update(updates)
+        .eq("id", id)
+        .eq("user_id", userId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pizzas"] });
+      toast.success("Pizza aggiornata con successo");
+    },
+    onError: (error) => {
+      toast.error("Errore nell'aggiornamento della pizza");
+      console.error(error);
+    },
+  });
+};
+
+export const useDeletePizza = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("pizzas")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pizzas"] });
+      toast.success("Pizza eliminata con successo");
+    },
+    onError: (error) => {
+      toast.error("Errore nell'eliminazione della pizza");
+      console.error(error);
+    },
+  });
+};
