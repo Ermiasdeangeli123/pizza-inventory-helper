@@ -2,12 +2,13 @@ import { Card } from "@/components/ui/card";
 import { EuroIcon, TrendingUpIcon } from "lucide-react";
 import SalesTable from "@/components/sales/SalesTable";
 import { usePizzas } from "@/queries/pizzaQueries";
-import { useAddSale } from "@/queries/salesQueries";
+import { useAddSale, useSales } from "@/queries/salesQueries";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Pizza } from "@/types/menu";
 
 const Sales = () => {
   const { data: pizzas, isLoading } = usePizzas();
+  const { data: sales = [] } = useSales();
   const addSale = useAddSale();
 
   const handleIncrement = (id: string) => {
@@ -47,15 +48,23 @@ const Sales = () => {
     );
   }
 
-  const totalRevenue = (pizzas || []).reduce(
-    (acc, pizza) => acc + pizza.price * (pizza.count || 0),
+  // Calculate totals from sales data
+  const totalRevenue = sales.reduce(
+    (acc, sale) => acc + (sale.price_at_time * sale.quantity),
     0
   );
 
-  const totalSales = (pizzas || []).reduce(
-    (acc, pizza) => acc + (pizza.count || 0),
+  const totalSales = sales.reduce(
+    (acc, sale) => acc + sale.quantity,
     0
   );
+
+  // Add count to pizzas based on sales
+  const pizzasWithCount = (pizzas || []).map(pizza => ({
+    ...pizza,
+    count: sales.filter(sale => sale.pizza_id === pizza.id)
+      .reduce((acc, sale) => acc + sale.quantity, 0)
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -92,7 +101,7 @@ const Sales = () => {
 
         <Card>
           <SalesTable
-            pizzas={pizzas as Pizza[] || []}
+            pizzas={pizzasWithCount}
             onIncrement={handleIncrement}
             onDecrement={handleDecrement}
           />

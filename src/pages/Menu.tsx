@@ -41,7 +41,7 @@ const Menu = () => {
     addPizza.mutate({
       name: newPizzaName,
       price: price,
-      ingredients: []
+      pizza_ingredients: []
     });
 
     setNewPizzaName("");
@@ -68,6 +68,12 @@ const Menu = () => {
       </div>
     );
   }
+
+  // Transform the pizza data to include the count from sales
+  const transformedPizzas: Pizza[] = (pizzas || []).map(pizza => ({
+    ...pizza,
+    count: 0 // This will be updated when we implement sales tracking
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -115,7 +121,7 @@ const Menu = () => {
 
         <Card className="p-6">
           <MenuTable
-            pizzas={pizzas || []}
+            pizzas={transformedPizzas}
             onUpdatePizza={(id, updates) => updatePizza.mutate({ id, updates })}
             onDeletePizza={(id) => deletePizza.mutate(id)}
           />
