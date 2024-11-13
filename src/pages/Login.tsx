@@ -26,7 +26,7 @@ const Login = () => {
       if (error) throw error;
 
       toast.success("Login effettuato con successo!");
-      navigate("/profits");
+      navigate("/dashboard");
     } catch (error: any) {
       toast.error(error.message);
     } finally {
