@@ -9,7 +9,196 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          icon: string
+          id: string
+          name: string
+        }
+        Insert: {
+          icon: string
+          id: string
+          name: string
+        }
+        Update: {
+          icon?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      inventory: {
+        Row: {
+          category_id: string | null
+          cost_per_unit: number
+          created_at: string
+          id: string
+          initial_quantity: number
+          min_stock: number
+          name: string
+          quantity: number
+          unit: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          cost_per_unit?: number
+          created_at?: string
+          id?: string
+          initial_quantity?: number
+          min_stock?: number
+          name: string
+          quantity?: number
+          unit: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string | null
+          cost_per_unit?: number
+          created_at?: string
+          id?: string
+          initial_quantity?: number
+          min_stock?: number
+          name?: string
+          quantity?: number
+          unit?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pizza_ingredients: {
+        Row: {
+          created_at: string
+          id: string
+          ingredient_id: string | null
+          pizza_id: string | null
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ingredient_id?: string | null
+          pizza_id?: string | null
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ingredient_id?: string | null
+          pizza_id?: string | null
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pizza_ingredients_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "inventory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pizza_ingredients_pizza_id_fkey"
+            columns: ["pizza_id"]
+            isOneToOne: false
+            referencedRelation: "pizzas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pizzas: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          price?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          created_at: string
+          id: string
+          pizza_id: string | null
+          price_at_time: number
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pizza_id?: string | null
+          price_at_time: number
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pizza_id?: string | null
+          price_at_time?: number
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_pizza_id_fkey"
+            columns: ["pizza_id"]
+            isOneToOne: false
+            referencedRelation: "pizzas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
