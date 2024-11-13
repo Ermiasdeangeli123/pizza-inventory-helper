@@ -81,43 +81,43 @@ const Dashboard = () => {
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ricavi Totali</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-green-700 dark:text-green-100">Ricavi Totali</CardTitle>
+            <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-200" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">€{totalRevenue.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-green-700 dark:text-green-100">€{totalRevenue.toFixed(2)}</div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Costi Totali</CardTitle>
-            <TrendingDown className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-red-700 dark:text-red-100">Costi Totali</CardTitle>
+            <TrendingDown className="h-4 w-4 text-red-600 dark:text-red-200" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">€{totalCosts.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-red-700 dark:text-red-100">€{totalCosts.toFixed(2)}</div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={`bg-gradient-to-br ${profit >= 0 ? 'from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800' : 'from-red-50 to-red-100 dark:from-red-900 dark:to-red-800'}`}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Profitto</CardTitle>
-            <Euro className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className={`text-sm font-medium ${profit >= 0 ? 'text-blue-700 dark:text-blue-100' : 'text-red-700 dark:text-red-100'}`}>Profitto</CardTitle>
+            <Euro className={`h-4 w-4 ${profit >= 0 ? 'text-blue-600 dark:text-blue-200' : 'text-red-600 dark:text-red-200'}`} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">€{profit.toFixed(2)}</div>
+            <div className={`text-2xl font-bold ${profit >= 0 ? 'text-blue-700 dark:text-blue-100' : 'text-red-700 dark:text-red-100'}`}>€{profit.toFixed(2)}</div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900 dark:to-amber-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Scorte Basse</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-amber-700 dark:text-amber-100">Scorte Basse</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-200" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{lowStockItems.length}</div>
+            <div className="text-2xl font-bold text-amber-700 dark:text-amber-100">{lowStockItems.length}</div>
           </CardContent>
         </Card>
       </div>
