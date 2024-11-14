@@ -7,12 +7,7 @@ export type InventoryItem = {
   minStock: number;
   costPerUnit: number;
   initialQuantity: number;
-};
-
-export type Category = {
-  id: string;
-  name: string;
-  icon: string;
+  expiryDate?: string; // Added optional expiryDate property
 };
 
 export const categories: Category[] = [
