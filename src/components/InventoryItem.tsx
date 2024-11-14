@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Edit2 } from "lucide-react";
+import { Minus, Plus, Edit2, Trash } from "lucide-react";
 import { toast } from "sonner";
 import type { InventoryItem as InventoryItemType } from "@/lib/data";
 import {
@@ -8,6 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -16,10 +18,17 @@ interface InventoryItemProps {
   item: InventoryItemType;
   onUpdateQuantity: (id: string, change: number) => void;
   onUpdateCost: (id: string, newCost: number) => void;
+  onDelete: (id: string) => void;
 }
 
-const InventoryItem = ({ item, onUpdateQuantity, onUpdateCost }: InventoryItemProps) => {
+const InventoryItem = ({ 
+  item, 
+  onUpdateQuantity, 
+  onUpdateCost,
+  onDelete 
+}: InventoryItemProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [newCost, setNewCost] = useState(item.costPerUnit.toString());
 
   const handleUpdate = (change: number) => {
@@ -40,6 +49,12 @@ const InventoryItem = ({ item, onUpdateQuantity, onUpdateCost }: InventoryItemPr
     onUpdateCost(item.id, parsedCost);
     setIsDialogOpen(false);
     toast.success(`Costo di ${item.name} aggiornato`);
+  };
+
+  const handleDelete = () => {
+    onDelete(item.id);
+    setIsDeleteDialogOpen(false);
+    toast.success(`${item.name} eliminato dall'inventario`);
   };
 
   const getStockLevelColor = () => {
@@ -88,6 +103,36 @@ const InventoryItem = ({ item, onUpdateQuantity, onUpdateCost }: InventoryItemPr
             </div>
           </DialogContent>
         </Dialog>
+
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Elimina {item.name}</DialogTitle>
+              <DialogDescription>
+                Sei sicuro di voler eliminare questo ingrediente dall'inventario?
+                Questa azione non può essere annullata.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                Annulla
+              </Button>
+              <Button variant="destructive" onClick={handleDelete}>
+                Elimina
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <Button
           variant="outline"
           size="icon"

@@ -20,6 +20,7 @@ interface CategorySectionProps {
   onUpdateQuantity: (id: string, change: number) => void;
   onAddItem: (item: Omit<InventoryItem, "id">) => void;
   onUpdateCost: (id: string, newCost: number) => void;
+  onDeleteItem: (id: string) => void;
 }
 
 const CategorySection = ({ 
@@ -27,7 +28,8 @@ const CategorySection = ({
   items, 
   onUpdateQuantity, 
   onAddItem,
-  onUpdateCost 
+  onUpdateCost,
+  onDeleteItem
 }: CategorySectionProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newItemName, setNewItemName] = useState("");
@@ -163,6 +165,7 @@ const CategorySection = ({
             item={item}
             onUpdateQuantity={onUpdateQuantity}
             onUpdateCost={onUpdateCost}
+            onDelete={onDeleteItem}
           />
         ))}
       </div>

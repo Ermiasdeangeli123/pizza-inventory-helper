@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { categories } from "@/lib/data";
 import CategorySection from "@/components/CategorySection";
-import { useInventory, useUpdateInventory, useAddInventoryItem } from "@/queries/inventoryQueries";
+import { useInventory, useUpdateInventory, useAddInventoryItem, useDeleteInventoryItem } from "@/queries/inventoryQueries";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { InventoryItem } from "@/lib/data";
 
@@ -9,6 +8,7 @@ const Index = () => {
   const { data: inventoryData, isLoading } = useInventory();
   const updateInventory = useUpdateInventory();
   const addInventoryItem = useAddInventoryItem();
+  const deleteInventoryItem = useDeleteInventoryItem();
 
   const handleUpdateQuantity = (id: string, change: number) => {
     const item = inventoryData?.find((i) => i.id === id);
@@ -37,6 +37,10 @@ const Index = () => {
       cost_per_unit: newItem.costPerUnit,
       initial_quantity: newItem.quantity
     });
+  };
+
+  const handleDeleteItem = (id: string) => {
+    deleteInventoryItem.mutate(id);
   };
 
   if (isLoading) {
@@ -81,6 +85,7 @@ const Index = () => {
             onUpdateQuantity={handleUpdateQuantity}
             onAddItem={handleAddItem}
             onUpdateCost={handleUpdateCost}
+            onDeleteItem={handleDeleteItem}
           />
         ))}
       </div>

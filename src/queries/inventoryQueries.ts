@@ -71,3 +71,29 @@ export const useAddInventoryItem = () => {
     },
   });
 };
+
+export const useDeleteInventoryItem = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("inventory")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["inventory"] });
+      toast.success("Prodotto eliminato");
+    },
+    onError: (error) => {
+      toast.error("Errore nell'eliminazione del prodotto");
+      console.error(error);
+    },
+  });
+};
