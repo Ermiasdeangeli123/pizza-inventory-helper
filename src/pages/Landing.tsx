@@ -4,10 +4,9 @@ import Logo from "@/components/Logo";
 import { 
   Clock, 
   TrendingUp, 
-  PieChart, 
-  Calculator,
   CheckCircle2,
-  Smartphone
+  Smartphone,
+  Calendar
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -60,6 +59,11 @@ const Landing = () => {
       description: "Gestione intelligente con avvisi automatici e livelli minimi"
     },
     {
+      icon: Calendar,
+      title: "Gestione Scadenze",
+      description: "Monitora le date di scadenza e riduci gli sprechi con notifiche automatiche"
+    },
+    {
       icon: Smartphone,
       title: "Accesso Ovunque",
       description: "Controlla il tuo business in tempo reale da qualsiasi dispositivo"
@@ -81,18 +85,18 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-50">
-      {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center max-w-4xl mx-auto mb-16">
           <div className="flex justify-center mb-8">
             <Logo />
           </div>
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-            La tua Soluzione Completa per Gestire la tua Pizzeria
+            La Soluzione Completa per Gestire la tua Pizzeria
           </h1>
           <p className="text-xl text-orange-900/70 mb-8">
             Gestisci il tuo inventario, il menu e i profitti in un'unica app. 
-            Ottimizza il tuo business con strumenti professionali pensati per le pizzerie.
+            Ottimizza il tuo business con strumenti professionali pensati per le pizzerie, 
+            inclusa la gestione automatica delle scadenze per ridurre gli sprechi.
           </p>
           
           <div className="flex gap-4 justify-center mb-12">
