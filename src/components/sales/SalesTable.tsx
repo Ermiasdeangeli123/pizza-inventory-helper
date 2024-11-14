@@ -24,15 +24,13 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
           <TableHeader>
             <TableRow>
               <TableHead>Pizza</TableHead>
-              <TableHead>Vendute</TableHead>
-              <TableHead className="text-right">Azioni</TableHead>
+              <TableHead className="text-right">Vendute</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {pizzas.map((pizza) => (
               <TableRow key={pizza.id}>
                 <TableCell className="min-w-[120px] font-medium">{pizza.name}</TableCell>
-                <TableCell className="min-w-[80px]">{pizza.count || 0}</TableCell>
                 <TableCell className="text-right min-w-[160px]">
                   <div className="flex items-center justify-end gap-2">
                     <Button
