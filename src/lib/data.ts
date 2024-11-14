@@ -10,6 +10,12 @@ export type InventoryItem = {
   expiryDate?: string; // Added optional expiryDate property
 };
 
+export type Category = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
 export const categories: Category[] = [
   { id: 'dairy', name: 'Latticini', icon: '🧀' },
   { id: 'meats', name: 'Carni', icon: '🥓' },
