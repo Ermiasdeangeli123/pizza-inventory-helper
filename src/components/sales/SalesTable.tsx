@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { MinusIcon, PlusIcon } from "lucide-react";
 
 interface SalesTableProps {
@@ -26,7 +25,6 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
             <TableRow>
               <TableHead>Pizza</TableHead>
               <TableHead>Vendute</TableHead>
-              <TableHead>Totale</TableHead>
               <TableHead className="text-right">Azioni</TableHead>
             </TableRow>
           </TableHeader>
@@ -35,7 +33,6 @@ const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
               <TableRow key={pizza.id}>
                 <TableCell className="min-w-[120px] font-medium">{pizza.name}</TableCell>
                 <TableCell className="min-w-[80px]">{pizza.count || 0}</TableCell>
-                <TableCell className="min-w-[100px]">€{((pizza.price * (pizza.count || 0))).toFixed(2)}</TableCell>
                 <TableCell className="text-right min-w-[160px]">
                   <div className="flex items-center justify-end gap-2">
                     <Button
