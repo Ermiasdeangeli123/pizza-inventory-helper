@@ -18,6 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import RecipeEditor from "./RecipeEditor";
 
@@ -76,98 +78,100 @@ const MenuTable = ({ pizzas, onUpdatePizza, onDeletePizza, onUpdateRecipe }: Men
   };
 
   return (
-    <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome Pizza</TableHead>
-            <TableHead>Prezzo</TableHead>
-            <TableHead>Azioni</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {pizzas.map((pizza) => (
-            <TableRow key={pizza.id}>
-              <TableCell>
-                {editingId === pizza.id ? (
-                  <Input
-                    value={editForm.name}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, name: e.target.value })
-                    }
-                  />
-                ) : (
-                  pizza.name
-                )}
-              </TableCell>
-              <TableCell>
-                {editingId === pizza.id ? (
-                  <Input
-                    type="number"
-                    value={editForm.price}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm,
-                        price: parseFloat(e.target.value),
-                      })
-                    }
-                    step="0.50"
-                    min="0"
-                  />
-                ) : (
-                  `€${pizza.price.toFixed(2)}`
-                )}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  {editingId === pizza.id ? (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleSave(pizza.id)}
-                      >
-                        <CheckIcon className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleCancel}
-                      >
-                        <XIcon className="h-4 w-4" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(pizza)}
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(pizza.id)}
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleOpenRecipe(pizza.id)}
-                      >
-                        <BookOpen className="h-4 w-4" />
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </TableCell>
+    <div className="overflow-hidden">
+      <div className="w-full overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome Pizza</TableHead>
+              <TableHead>Prezzo</TableHead>
+              <TableHead className="text-right">Azioni</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {pizzas.map((pizza) => (
+              <TableRow key={pizza.id}>
+                <TableCell className="min-w-[120px]">
+                  {editingId === pizza.id ? (
+                    <Input
+                      value={editForm.name}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, name: e.target.value })
+                      }
+                    />
+                  ) : (
+                    pizza.name
+                  )}
+                </TableCell>
+                <TableCell className="min-w-[100px]">
+                  {editingId === pizza.id ? (
+                    <Input
+                      type="number"
+                      value={editForm.price}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          price: parseFloat(e.target.value),
+                        })
+                      }
+                      step="0.50"
+                      min="0"
+                    />
+                  ) : (
+                    `€${pizza.price.toFixed(2)}`
+                  )}
+                </TableCell>
+                <TableCell className="text-right min-w-[180px]">
+                  <div className="flex items-center justify-end gap-2">
+                    {editingId === pizza.id ? (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleSave(pizza.id)}
+                        >
+                          <CheckIcon className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={handleCancel}
+                        >
+                          <XIcon className="h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(pizza)}
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(pizza.id)}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleOpenRecipe(pizza.id)}
+                        >
+                          <BookOpen className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <Dialog open={recipeDialogOpen} onOpenChange={setRecipeDialogOpen}>
         <DialogContent className="max-w-2xl">
@@ -185,7 +189,7 @@ const MenuTable = ({ pizzas, onUpdatePizza, onDeletePizza, onUpdateRecipe }: Men
           )}
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 

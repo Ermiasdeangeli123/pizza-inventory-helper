@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MinusIcon, PlusIcon } from "lucide-react";
 
 interface SalesTableProps {
   pizzas: Pizza[];
@@ -18,49 +19,52 @@ interface SalesTableProps {
 
 const SalesTable = ({ pizzas, onIncrement, onDecrement }: SalesTableProps) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Pizza</TableHead>
-          <TableHead>Vendute</TableHead>
-          <TableHead>Totale</TableHead>
-          <TableHead>Azioni</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {pizzas.map((pizza) => (
-          <TableRow key={pizza.id}>
-            <TableCell className="font-medium">{pizza.name}</TableCell>
-            <TableCell>{pizza.count || 0}</TableCell>
-            <TableCell>€{(pizza.price * (pizza.count || 0)).toFixed(2)}</TableCell>
-            <TableCell>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onDecrement(pizza.id)}
-                >
-                  -
-                </Button>
-                <Input
-                  type="number"
-                  value={pizza.count || 0}
-                  className="w-20 text-center"
-                  readOnly
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onIncrement(pizza.id)}
-                >
-                  +
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="overflow-hidden">
+      <div className="w-full overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Pizza</TableHead>
+              <TableHead>Vendute</TableHead>
+              <TableHead>Totale</TableHead>
+              <TableHead className="text-right">Azioni</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {pizzas.map((pizza) => (
+              <TableRow key={pizza.id}>
+                <TableCell className="min-w-[120px] font-medium">{pizza.name}</TableCell>
+                <TableCell className="min-w-[80px]">{pizza.count || 0}</TableCell>
+                <TableCell className="min-w-[100px]">€{((pizza.price * (pizza.count || 0))).toFixed(2)}</TableCell>
+                <TableCell className="text-right min-w-[160px]">
+                  <div className="flex items-center justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => onDecrement(pizza.id)}
+                    >
+                      <MinusIcon className="h-4 w-4" />
+                    </Button>
+                    <div className="w-12 text-center">
+                      {pizza.count || 0}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => onIncrement(pizza.id)}
+                    >
+                      <PlusIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 };
 
