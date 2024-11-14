@@ -79,17 +79,6 @@ const Landing = () => {
             </li>
           </ul>
         </div>
-
-        {/* CTA Section */}
-        <div className="text-center">
-          <Button 
-            size="lg"
-            onClick={handleGetStarted}
-            className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
-          >
-            Prova la Demo Gratuita
-          </Button>
-        </div>
       </div>
     </div>
   );
