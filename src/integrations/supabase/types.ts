@@ -32,6 +32,7 @@ export type Database = {
           category_id: string | null
           cost_per_unit: number
           created_at: string
+          expiry_date: string | null
           id: string
           initial_quantity: number
           min_stock: number
@@ -45,6 +46,7 @@ export type Database = {
           category_id?: string | null
           cost_per_unit?: number
           created_at?: string
+          expiry_date?: string | null
           id?: string
           initial_quantity?: number
           min_stock?: number
@@ -58,6 +60,7 @@ export type Database = {
           category_id?: string | null
           cost_per_unit?: number
           created_at?: string
+          expiry_date?: string | null
           id?: string
           initial_quantity?: number
           min_stock?: number
