@@ -5,7 +5,9 @@ import {
   Clock, 
   TrendingUp, 
   PieChart, 
-  Calculator
+  Calculator,
+  CheckCircle2,
+  Smartphone
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -45,22 +47,22 @@ const Landing = () => {
     {
       icon: Clock,
       title: "Risparmio di Tempo",
-      description: "Automatizza la gestione dell'inventario e risparmia ore ogni settimana"
+      description: "Automatizza la gestione dell'inventario e risparmia fino al 50% del tempo"
+    },
+    {
+      icon: CheckCircle2,
+      title: "Zero Errori",
+      description: "Elimina gli errori manuali con la digitalizzazione completa"
     },
     {
       icon: TrendingUp,
-      title: "Riduzione degli Sprechi",
-      description: "Monitora le scorte in tempo reale e ottimizza gli ordini"
+      title: "Ottimizzazione Scorte",
+      description: "Gestione intelligente con avvisi automatici e livelli minimi"
     },
     {
-      icon: PieChart,
-      title: "Analisi Vendite",
-      description: "Visualizza statistiche dettagliate e trend di vendita"
-    },
-    {
-      icon: Calculator,
-      title: "Calcolo Profitti",
-      description: "Calcola automaticamente margini e profitti per ogni pizza"
+      icon: Smartphone,
+      title: "Accesso Ovunque",
+      description: "Controlla il tuo business in tempo reale da qualsiasi dispositivo"
     }
   ];
 
@@ -96,8 +98,8 @@ const Landing = () => {
           <div className="flex gap-4 justify-center mb-12">
             <Button 
               size="lg"
-              onClick={handleGetStarted}
               className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
+              onClick={handleGetStarted}
             >
               Prova Gratis per 30 Giorni
             </Button>
