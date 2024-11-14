@@ -91,7 +91,7 @@ const RecipeEditor = ({ pizzaId, existingIngredients, onSave }: RecipeEditorProp
                 <SelectContent>
                   {inventory.map((item) => (
                     <SelectItem key={item.id} value={item.id}>
-                      {item.name} ({item.unit}) - €{item.cost_per_unit.toFixed(2)}/kg
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
