@@ -9,32 +9,25 @@ import { format } from "date-fns";
 import { it } from 'date-fns/locale';
 import { useUpdateInventory } from "@/queries/inventoryQueries";
 import { toast } from "sonner";
+import type { InventoryItem as InventoryItemType } from "@/lib/data";
 
 interface InventoryItemProps {
-  id: string;
-  name: string;
-  quantity: number;
-  unit: string;
-  minStock: number;
-  costPerUnit: number;
-  initialQuantity: number;
-  expiryDate?: string;
+  item: InventoryItemType;
+  onUpdateQuantity: (id: string, change: number) => void;
+  onUpdateCost: (id: string, newCost: number) => void;
+  onDelete: (id: string) => void;
 }
 
 const InventoryItem = ({
-  id,
-  name,
-  quantity,
-  unit,
-  minStock,
-  costPerUnit,
-  initialQuantity,
-  expiryDate
+  item,
+  onUpdateQuantity,
+  onUpdateCost,
+  onDelete
 }: InventoryItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newQuantity, setNewQuantity] = useState(quantity.toString());
+  const [newQuantity, setNewQuantity] = useState(item.quantity.toString());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    expiryDate ? new Date(expiryDate) : undefined
+    item.expiryDate ? new Date(item.expiryDate) : undefined
   );
 
   const updateInventory = useUpdateInventory();
@@ -46,7 +39,7 @@ const InventoryItem = ({
     };
 
     updateInventory.mutate(
-      { id, updates },
+      { id: item.id, updates },
       {
         onSuccess: () => {
           setIsEditing(false);
@@ -60,14 +53,14 @@ const InventoryItem = ({
     );
   };
 
-  const isLowStock = quantity <= minStock;
+  const isLowStock = item.quantity <= item.minStock;
   const isExpiringSoon = selectedDate && 
     (new Date(selectedDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) <= 7;
 
   return (
     <div className={`p-4 rounded-lg border ${isLowStock ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}>
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold">{name}</h3>
+        <h3 className="text-lg font-semibold">{item.name}</h3>
         <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)}>
           {isEditing ? "Annulla" : "Modifica"}
         </Button>
@@ -77,7 +70,7 @@ const InventoryItem = ({
         {isEditing ? (
           <>
             <div>
-              <Label>Quantità ({unit})</Label>
+              <Label>Quantità ({item.unit})</Label>
               <Input
                 type="number"
                 value={newQuantity}
@@ -122,13 +115,13 @@ const InventoryItem = ({
         ) : (
           <>
             <p>
-              Quantità: <span className="font-medium">{quantity} {unit}</span>
+              Quantità: <span className="font-medium">{item.quantity} {item.unit}</span>
               {isLowStock && (
                 <span className="text-red-600 ml-2">(Scorta bassa)</span>
               )}
             </p>
             <p>
-              Costo per {unit}: <span className="font-medium">€{costPerUnit.toFixed(2)}</span>
+              Costo per {item.unit}: <span className="font-medium">€{item.costPerUnit.toFixed(2)}</span>
             </p>
             {selectedDate && (
               <p>
