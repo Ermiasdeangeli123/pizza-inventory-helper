@@ -1,31 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Logo from "@/components/Logo";
 import { 
   Clock, 
   TrendingUp, 
   PieChart, 
-  Sparkles,
-  ChefHat,
   Calculator,
-  BarChart3,
-  Settings,
-  MessageCircle,
-  Download,
   Mail
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import FAQSection from "@/components/landing/FAQSection";
 
 const Landing = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleGetStarted = () => {
     toast.success("Benvenuto! Iniziamo a gestire la tua pizzeria.");
-    navigate("/register");
+    window.location.href = "/register";
   };
 
   const handleWaitlist = async (e: React.FormEvent) => {
@@ -82,45 +75,6 @@ const Landing = () => {
       quote: "Finalmente posso vedere in tempo reale quali sono le pizze più redditizie.",
       author: "Laura M.",
       role: "Manager Pizzeria Milano"
-    }
-  ];
-
-  const faqs = [
-    {
-      question: "Posso personalizzare il menu?",
-      answer: "Sì, puoi aggiungere, modificare e rimuovere pizze dal menu in qualsiasi momento, incluse ricette e prezzi."
-    },
-    {
-      question: "Come posso monitorare i profitti?",
-      answer: "PizzaLova calcola automaticamente i costi degli ingredienti e i margini di profitto per ogni pizza venduta."
-    },
-    {
-      question: "È difficile iniziare?",
-      answer: "No, offriamo una guida completa e supporto dedicato per aiutarti a configurare il sistema."
-    }
-  ];
-
-  const pricingPlans = [
-    {
-      name: "Base",
-      price: "29",
-      features: [
-        "Gestione inventario base",
-        "Menu digitale",
-        "Statistiche essenziali",
-        "1 utente"
-      ]
-    },
-    {
-      name: "Pro",
-      price: "49",
-      features: [
-        "Tutto del piano Base",
-        "Analytics avanzate",
-        "Previsioni vendite",
-        "5 utenti",
-        "Supporto prioritario"
-      ]
     }
   ];
 
@@ -198,48 +152,7 @@ const Landing = () => {
         </div>
 
         {/* FAQ Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8 text-red-800">
-            Domande Frequenti
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-xl font-semibold mb-2 text-red-700">{faq.question}</h3>
-                <p className="text-gray-700">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Pricing Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8 text-red-800">
-            Piani e Prezzi
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <div key={index} className="bg-white p-8 rounded-lg shadow-lg border-2 border-orange-100">
-                <h3 className="text-2xl font-bold mb-2 text-red-700">{plan.name}</h3>
-                <p className="text-4xl font-bold mb-6">€{plan.price}<span className="text-lg text-gray-600">/mese</span></p>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, fIndex) => (
-                    <li key={fIndex} className="flex items-center">
-                      <Sparkles className="w-5 h-5 text-red-600 mr-2" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button 
-                  className="w-full bg-red-600 hover:bg-red-700"
-                  onClick={handleGetStarted}
-                >
-                  Inizia Ora
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
+        <FAQSection />
 
         {/* Newsletter Section */}
         <div className="max-w-2xl mx-auto text-center mb-16">
