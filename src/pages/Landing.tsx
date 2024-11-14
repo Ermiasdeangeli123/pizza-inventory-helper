@@ -54,11 +54,6 @@ const Landing = () => {
       description: "Elimina gli errori manuali con la digitalizzazione completa"
     },
     {
-      icon: TrendingUp,
-      title: "Ottimizzazione Scorte",
-      description: "Gestione intelligente con avvisi automatici e livelli minimi"
-    },
-    {
       icon: Calendar,
       title: "Gestione Scadenze",
       description: "Monitora le date di scadenza e riduci gli sprechi con notifiche automatiche"
@@ -67,19 +62,6 @@ const Landing = () => {
       icon: Smartphone,
       title: "Accesso Ovunque",
       description: "Controlla il tuo business in tempo reale da qualsiasi dispositivo"
-    }
-  ];
-
-  const testimonials = [
-    {
-      quote: "Da quando usiamo PizzaLova, risparmiamo ore ogni settimana nella gestione dell'inventario!",
-      author: "Marco B.",
-      role: "Proprietario Pizzeria Roma"
-    },
-    {
-      quote: "Finalmente posso vedere in tempo reale quali sono le pizze più redditizie.",
-      author: "Laura M.",
-      role: "Manager Pizzeria Milano"
     }
   ];
 
@@ -95,8 +77,7 @@ const Landing = () => {
           </h1>
           <p className="text-xl text-orange-900/70 mb-8">
             Gestisci il tuo inventario, il menu e i profitti in un'unica app. 
-            Ottimizza il tuo business con strumenti professionali pensati per le pizzerie, 
-            inclusa la gestione automatica delle scadenze per ridurre gli sprechi.
+            Ottimizza il tuo business con strumenti professionali pensati per le pizzerie.
           </p>
           
           <div className="flex gap-4 justify-center mb-12">
@@ -130,22 +111,6 @@ const Landing = () => {
               <p className="text-orange-900/70">{feature.description}</p>
             </div>
           ))}
-        </div>
-
-        {/* Testimonials */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8 text-red-800">
-            Cosa Dicono i Nostri Clienti
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
-                <p className="text-lg italic mb-4 text-gray-700">"{testimonial.quote}"</p>
-                <p className="font-semibold text-red-700">{testimonial.author}</p>
-                <p className="text-sm text-gray-600">{testimonial.role}</p>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* FAQ Section */}
