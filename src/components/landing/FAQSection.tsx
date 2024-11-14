@@ -11,8 +11,8 @@ const FAQSection = () => {
       answer: "PizzaLova calcola automaticamente i costi degli ingredienti e i margini di profitto per ogni pizza venduta."
     },
     {
-      question: "Come funziona l'app?",
-      answer: "PizzaLova è un'app molto intuitiva che ti guida passo dopo passo. Basta inserire il tuo menu, gestire l'inventario e iniziare a registrare le vendite. Il resto viene fatto automaticamente!"
+      question: "L'app è facile da usare?",
+      answer: "Assolutamente! PizzaLova è stata progettata per essere estremamente intuitiva. Con un'interfaccia semplice e chiara, anche chi non è esperto di tecnologia può gestire facilmente la propria pizzeria."
     },
     {
       question: "Come gestisce l'inventario?",
@@ -21,6 +21,14 @@ const FAQSection = () => {
     {
       question: "Posso vedere le statistiche delle vendite?",
       answer: "Sì, hai accesso a statistiche dettagliate sulle vendite, inclusi i periodi più redditizi e le pizze più popolari."
+    },
+    {
+      question: "Supporta più dispositivi?",
+      answer: "PizzaLova funziona su smartphone, tablet e computer, permettendoti di gestire la tua pizzeria ovunque tu sia."
+    },
+    {
+      question: "Quanto tempo mi farà risparmiare?",
+      answer: "Molti nostri clienti risparmiano fino a 10 ore a settimana grazie all'automazione della gestione dell'inventario e delle vendite."
     },
     {
       question: "Come funziona il supporto clienti?",

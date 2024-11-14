@@ -5,8 +5,7 @@ import {
   Clock, 
   TrendingUp, 
   PieChart, 
-  Calculator,
-  Mail
+  Calculator
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -101,14 +100,6 @@ const Landing = () => {
               className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
             >
               Prova Gratis per 30 Giorni
-            </Button>
-            <Button 
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-6"
-              onClick={() => window.location.href = "#demo"}
-            >
-              Prenota una Demo
             </Button>
           </div>
 
