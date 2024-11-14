@@ -28,7 +28,7 @@ const RecipeEditor = ({ pizzaId, existingIngredients, onSave }: RecipeEditorProp
   const [ingredients, setIngredients] = useState(
     existingIngredients.map(ing => ({
       ingredient_id: ing.ingredient_id,
-      quantity: ing.quantity
+      quantity: ing.quantity * 1000 // Convert kg to g for display
     }))
   );
 
@@ -56,7 +56,22 @@ const RecipeEditor = ({ pizzaId, existingIngredients, onSave }: RecipeEditorProp
       return;
     }
 
-    onSave(ingredients);
+    // Convert grams back to kilograms before saving
+    const convertedIngredients = ingredients.map(ing => ({
+      ingredient_id: ing.ingredient_id,
+      quantity: ing.quantity / 1000 // Convert g back to kg for storage
+    }));
+
+    onSave(convertedIngredients);
+  };
+
+  const getIngredientCost = (ingredientId: string, quantityInGrams: number) => {
+    const ingredient = inventory.find(item => item.id === ingredientId);
+    if (!ingredient) return 0;
+    
+    // Convert grams to kg for cost calculation
+    const quantityInKg = quantityInGrams / 1000;
+    return ingredient.cost_per_unit * quantityInKg;
   };
 
   return (
@@ -76,22 +91,27 @@ const RecipeEditor = ({ pizzaId, existingIngredients, onSave }: RecipeEditorProp
                 <SelectContent>
                   {inventory.map((item) => (
                     <SelectItem key={item.id} value={item.id}>
-                      {item.name} ({item.unit})
+                      {item.name} ({item.unit}) - €{item.cost_per_unit.toFixed(2)}/kg
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="w-32">
-              <Label>Quantità</Label>
+              <Label>Quantità (g)</Label>
               <Input
                 type="number"
                 value={ingredient.quantity}
                 onChange={(e) => handleIngredientChange(index, "quantity", parseFloat(e.target.value))}
                 min="0"
-                step="0.1"
+                step="10"
               />
             </div>
+            {ingredient.ingredient_id && (
+              <div className="w-24 text-sm text-gray-500 pb-2">
+                €{getIngredientCost(ingredient.ingredient_id, ingredient.quantity).toFixed(2)}
+              </div>
+            )}
             <Button
               variant="ghost"
               size="icon"
