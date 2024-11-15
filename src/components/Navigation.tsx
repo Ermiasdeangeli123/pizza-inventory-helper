@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { NotificationBell } from "./NotificationBell";
 
 interface NavigationProps {
   session: Session | null;
@@ -104,6 +105,7 @@ const Navigation = ({ session }: NavigationProps) => {
 
           {/* Desktop Account & Logout Buttons */}
           <div className="hidden md:flex items-center gap-2">
+            <NotificationBell />
             <Link to="/account">
               <Button variant="ghost">
                 <User className="h-4 w-4 mr-2" />
