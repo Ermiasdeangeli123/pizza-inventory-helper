@@ -142,9 +142,6 @@ const InventoryItem = ({
                 <span className="text-red-600 ml-2">(Scorta bassa)</span>
               )}
             </p>
-            <p>
-              Costo per {item.unit}: <span className="font-medium">€{item.costPerUnit.toFixed(2)}</span>
-            </p>
             {selectedDate && (
               <p>
                 Scadenza:{" "}
