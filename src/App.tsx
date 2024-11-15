@@ -16,20 +16,35 @@ import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 
 const App = () => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Initial session:", session?.user?.id);
       setSession(session);
+      if (session?.user) {
+        toast.success("Bentornato!");
+      }
     });
 
+    // Listen for changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", session?.user?.id);
       setSession(session);
     });
 
@@ -37,7 +52,7 @@ const App = () => {
   }, []);
 
   return (
-    <SessionContextProvider supabaseClient={supabase}>
+    <SessionContextProvider supabaseClient={supabase} initialSession={session}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
