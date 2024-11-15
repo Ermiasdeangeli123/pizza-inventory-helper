@@ -8,11 +8,11 @@ const FAQSection = () => {
     },
     {
       question: "Come posso monitorare i profitti?",
-      answer: "PizzaLova calcola automaticamente i costi degli ingredienti e i margini di profitto per ogni pizza venduta."
+      answer: "Tracciapizza calcola automaticamente i costi degli ingredienti e i margini di profitto per ogni pizza venduta."
     },
     {
       question: "L'app è facile da usare?",
-      answer: "Assolutamente! PizzaLova è stata progettata per essere estremamente intuitiva. Con un'interfaccia semplice e chiara, anche chi non è esperto di tecnologia può gestire facilmente la propria pizzeria."
+      answer: "Assolutamente! Tracciapizza è stata progettata per essere estremamente intuitiva. Con un'interfaccia semplice e chiara, anche chi non è esperto di tecnologia può gestire facilmente la propria pizzeria."
     },
     {
       question: "Come gestisce l'inventario?",
@@ -24,7 +24,7 @@ const FAQSection = () => {
     },
     {
       question: "Supporta più dispositivi?",
-      answer: "PizzaLova funziona su smartphone, tablet e computer, permettendoti di gestire la tua pizzeria ovunque tu sia."
+      answer: "Tracciapizza funziona su smartphone, tablet e computer, permettendoti di gestire la tua pizzeria ovunque tu sia."
     },
     {
       question: "Quanto tempo mi farà risparmiare?",
