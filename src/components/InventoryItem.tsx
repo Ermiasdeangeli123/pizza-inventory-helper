@@ -37,7 +37,7 @@ const InventoryItem = ({
     const updates = {
       quantity: parseFloat(newQuantity),
       cost_per_unit: parseFloat(newCostPerUnit),
-      expiry_date: selectedDate ? selectedDate.toISOString() : null
+      expiry_date: selectedDate
     };
 
     updateInventory.mutate(
@@ -142,11 +142,11 @@ const InventoryItem = ({
                 <span className="text-red-600 ml-2">(Scorta bassa)</span>
               )}
             </p>
-            {selectedDate && (
+            {item.expiryDate && (
               <p>
                 Scadenza:{" "}
                 <span className={`font-medium ${isExpiringSoon ? 'text-red-600' : ''}`}>
-                  {format(new Date(selectedDate), "PPP", { locale: it })}
+                  {format(new Date(item.expiryDate), "PPP", { locale: it })}
                   {isExpiringSoon && " (In scadenza)"}
                 </span>
               </p>

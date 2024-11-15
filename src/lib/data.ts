@@ -7,7 +7,7 @@ export type InventoryItem = {
   minStock: number;
   costPerUnit: number;
   initialQuantity: number;
-  expiryDate?: string; // Added optional expiryDate property
+  expiryDate?: string | null;
 };
 
 export type Category = {

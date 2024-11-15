@@ -12,7 +12,7 @@ export const useInventory = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("inventory")
-        .select("*, category_id")
+        .select("*, category_id, expiry_date")
         .eq("user_id", userId);
 
       if (error) throw error;
@@ -29,6 +29,11 @@ export const useUpdateInventory = () => {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
+      // Ensure expiry_date is properly formatted for Supabase
+      if (updates.expiry_date instanceof Date) {
+        updates.expiry_date = updates.expiry_date.toISOString();
+      }
+
       const { error } = await supabase
         .from("inventory")
         .update(updates)
