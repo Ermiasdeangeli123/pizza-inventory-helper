@@ -22,7 +22,10 @@ export const usePizzas = () => {
         `)
         .eq("user_id", userId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching pizzas:", error);
+        throw error;
+      }
       return data;
     },
     enabled: !!userId,

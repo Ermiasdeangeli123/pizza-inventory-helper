@@ -15,7 +15,10 @@ export const useInventory = () => {
         .select("*, category_id, expiry_date")
         .eq("user_id", userId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching inventory:", error);
+        throw error;
+      }
       return data;
     },
     enabled: !!userId,
