@@ -37,7 +37,7 @@ const InventoryItem = ({
     const updates = {
       quantity: parseFloat(newQuantity),
       cost_per_unit: parseFloat(newCostPerUnit),
-      expiry_date: selectedDate
+      expiry_date: selectedDate ? selectedDate.toISOString() : null
     };
 
     updateInventory.mutate(
@@ -58,6 +58,14 @@ const InventoryItem = ({
   const isLowStock = item.quantity <= item.minStock;
   const isExpiringSoon = selectedDate && 
     (new Date(selectedDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) <= 7;
+
+  // Show notification for expiring items
+  if (isExpiringSoon && !isEditing) {
+    toast.warning(`${item.name} sta per scadere`, {
+      description: `Scade il ${format(new Date(selectedDate!), "PPP", { locale: it })}`,
+      duration: 5000,
+    });
+  }
 
   return (
     <div className={`p-4 rounded-lg border ${isLowStock ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}>
