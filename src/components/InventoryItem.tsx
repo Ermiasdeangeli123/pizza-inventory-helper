@@ -26,6 +26,7 @@ const InventoryItem = ({
 }: InventoryItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newQuantity, setNewQuantity] = useState(item.quantity.toString());
+  const [newCostPerUnit, setNewCostPerUnit] = useState(item.costPerUnit.toString());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     item.expiryDate ? new Date(item.expiryDate) : undefined
   );
@@ -35,6 +36,7 @@ const InventoryItem = ({
   const handleSave = () => {
     const updates = {
       quantity: parseFloat(newQuantity),
+      cost_per_unit: parseFloat(newCostPerUnit),
       expiry_date: selectedDate
     };
 
@@ -76,6 +78,18 @@ const InventoryItem = ({
                 value={newQuantity}
                 onChange={(e) => setNewQuantity(e.target.value)}
                 className="w-full"
+              />
+            </div>
+
+            <div>
+              <Label>Costo per {item.unit}</Label>
+              <Input
+                type="number"
+                value={newCostPerUnit}
+                onChange={(e) => setNewCostPerUnit(e.target.value)}
+                className="w-full"
+                step="0.01"
+                min="0"
               />
             </div>
             
