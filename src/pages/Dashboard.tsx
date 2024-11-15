@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePizzas } from "@/queries/pizzaQueries";
-import { Euro, Package, TrendingUp, AlertTriangle, TrendingDown } from "lucide-react";
+import { Euro, Package, TrendingUp, TrendingDown } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,11 +29,6 @@ const Dashboard = () => {
 
   // Calculate total pizzas sold from sales
   const totalPizzasSold = sales.reduce((acc, sale) => acc + sale.quantity, 0);
-
-  // Find low stock items
-  const lowStockItems = inventory.filter(
-    item => item.quantity <= item.min_stock
-  );
 
   // Calculate costs from ingredients used
   const totalCosts = sales.reduce((acc, sale) => {
@@ -80,7 +75,7 @@ const Dashboard = () => {
     <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-green-700 dark:text-green-100">Ricavi Totali</CardTitle>
@@ -108,16 +103,6 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${profit >= 0 ? 'text-blue-700 dark:text-blue-100' : 'text-red-700 dark:text-red-100'}`}>€{profit.toFixed(2)}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900 dark:to-amber-800">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-amber-700 dark:text-amber-100">Scorte Basse</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-200" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-amber-700 dark:text-amber-100">{lowStockItems.length}</div>
           </CardContent>
         </Card>
       </div>
