@@ -29,14 +29,12 @@ export const useUpdateInventory = () => {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
-      // Ensure expiry_date is properly formatted for Supabase
-      if (updates.expiry_date instanceof Date) {
-        updates.expiry_date = updates.expiry_date.toISOString();
-      }
-
       const { error } = await supabase
         .from("inventory")
-        .update(updates)
+        .update({
+          ...updates,
+          expiry_date: updates.expiry_date ? updates.expiry_date.toISOString() : null
+        })
         .eq("id", id)
         .eq("user_id", userId);
 

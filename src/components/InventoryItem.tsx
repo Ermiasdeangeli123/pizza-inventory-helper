@@ -56,13 +56,13 @@ const InventoryItem = ({
   };
 
   const isLowStock = item.quantity <= item.minStock;
-  const isExpiringSoon = selectedDate && 
-    (new Date(selectedDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) <= 7;
+  const isExpiringSoon = item.expiryDate && 
+    (new Date(item.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) <= 7;
 
   // Show notification for expiring items
   if (isExpiringSoon && !isEditing) {
     toast.warning(`${item.name} sta per scadere`, {
-      description: `Scade il ${format(new Date(selectedDate!), "PPP", { locale: it })}`,
+      description: `Scade il ${format(new Date(item.expiryDate!), "PPP", { locale: it })}`,
       duration: 5000,
     });
   }
