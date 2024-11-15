@@ -43,16 +43,31 @@ const App = () => {
     // Listen for changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", session?.user?.id);
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session?.user?.id);
+      
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('Token has been refreshed');
+      }
+      
+      if (event === 'SIGNED_OUT') {
+        // Clear any application cache/state if needed
+        queryClient.clear();
+      }
+      
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
-    <SessionContextProvider supabaseClient={supabase} initialSession={session}>
+    <SessionContextProvider 
+      supabaseClient={supabase} 
+      initialSession={session}
+    >
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
