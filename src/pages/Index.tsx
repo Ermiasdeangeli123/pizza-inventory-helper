@@ -67,7 +67,8 @@ const Index = () => {
     unit: item.unit,
     minStock: item.min_stock,
     costPerUnit: item.cost_per_unit,
-    initialQuantity: item.initial_quantity
+    initialQuantity: item.initial_quantity,
+    expiryDate: item.expiry_date
   })) || [];
 
   return (
