@@ -3,7 +3,7 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import { cn } from "@/lib/utils";
 import Logo from "./Logo";
 import { Button } from "./ui/button";
-import { LogOut, Menu } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { Session } from "@supabase/supabase-js";
@@ -83,6 +83,12 @@ const Navigation = ({ session }: NavigationProps) => {
                       <NavLinks onClick={() => setIsOpen(false)} />
                     </NavigationMenuList>
                   </NavigationMenu>
+                  <Link to="/account" onClick={() => setIsOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <User className="h-4 w-4 mr-2" />
+                      Account
+                    </Button>
+                  </Link>
                   <Button 
                     variant="ghost" 
                     onClick={handleLogout}
@@ -96,8 +102,14 @@ const Navigation = ({ session }: NavigationProps) => {
             </Sheet>
           </div>
 
-          {/* Desktop Logout Button */}
-          <div className="hidden md:block">
+          {/* Desktop Account & Logout Buttons */}
+          <div className="hidden md:flex items-center gap-2">
+            <Link to="/account">
+              <Button variant="ghost">
+                <User className="h-4 w-4 mr-2" />
+                Account
+              </Button>
+            </Link>
             <Button variant="ghost" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Esci

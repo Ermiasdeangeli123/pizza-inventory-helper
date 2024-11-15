@@ -13,6 +13,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Account from "./pages/Account";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 
@@ -62,6 +63,10 @@ const App = () => {
               <Route
                 path="/menu"
                 element={session ? <Menu /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/account"
+                element={session ? <Account /> : <Navigate to="/login" />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
