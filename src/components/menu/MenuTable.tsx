@@ -17,9 +17,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import RecipeEditor from "./RecipeEditor";
 
@@ -58,9 +55,14 @@ const MenuTable = ({ pizzas, onUpdatePizza, onDeletePizza, onUpdateRecipe }: Men
     setEditForm({});
   };
 
-  const handleDelete = (id: string) => {
-    onDeletePizza(id);
-    toast.success("Pizza eliminata con successo");
+  const handleDelete = async (id: string) => {
+    try {
+      await onDeletePizza(id);
+      toast.success("Pizza eliminata con successo");
+    } catch (error) {
+      console.error('Error deleting pizza:', error);
+      toast.error("Errore durante l'eliminazione della pizza");
+    }
   };
 
   const handleOpenRecipe = (pizzaId: string) => {
