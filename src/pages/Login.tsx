@@ -23,12 +23,19 @@ const Login = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          toast.error("Email o password non corretti");
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
 
       toast.success("Login effettuato con successo!");
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error("Si è verificato un errore durante il login");
     } finally {
       setLoading(false);
     }
@@ -48,6 +55,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required 
+              autoComplete="email"
             />
           </div>
           <div>
@@ -57,6 +65,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required 
+              autoComplete="current-password"
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
