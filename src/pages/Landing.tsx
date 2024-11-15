@@ -94,7 +94,7 @@ const Landing = () => {
           <div className="aspect-video bg-white rounded-xl shadow-lg mb-16">
             <iframe 
               className="w-full h-full rounded-xl"
-              src="https://www.youtube.com/embed/your-video-id"
+              src="https://www.youtube.com/embed/fXuFpB0Y030"
               title="PizzaLova Demo"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
