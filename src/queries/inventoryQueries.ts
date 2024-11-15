@@ -10,6 +10,11 @@ export const useInventory = () => {
   return useQuery({
     queryKey: ["inventory", userId],
     queryFn: async () => {
+      if (!userId) {
+        console.error("No user ID available");
+        return [];
+      }
+
       const { data, error } = await supabase
         .from("inventory")
         .select("*, category_id, expiry_date")
@@ -17,11 +22,18 @@ export const useInventory = () => {
 
       if (error) {
         console.error("Error fetching inventory:", error);
+        toast.error("Errore nel caricamento dell'inventario");
         throw error;
       }
-      return data;
+
+      if (!data || data.length === 0) {
+        console.log("No inventory data found for user:", userId);
+      }
+
+      return data || [];
     },
     enabled: !!userId,
+    retry: 2,
   });
 };
 

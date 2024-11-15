@@ -11,6 +11,11 @@ export const usePizzas = () => {
   return useQuery({
     queryKey: ["pizzas", userId],
     queryFn: async () => {
+      if (!userId) {
+        console.error("No user ID available");
+        return [];
+      }
+
       const { data, error } = await supabase
         .from("pizzas")
         .select(`
@@ -24,11 +29,18 @@ export const usePizzas = () => {
 
       if (error) {
         console.error("Error fetching pizzas:", error);
+        toast.error("Errore nel caricamento del menu");
         throw error;
       }
-      return data;
+
+      if (!data || data.length === 0) {
+        console.log("No pizzas found for user:", userId);
+      }
+
+      return data || [];
     },
     enabled: !!userId,
+    retry: 2,
   });
 };
 
