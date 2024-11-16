@@ -24,6 +24,16 @@ export type PizzaIngredient = {
   };
 };
 
+export type Sale = {
+  id: string;
+  pizza_id: string;
+  quantity: number;
+  price_at_time: number;
+  created_at: string;
+  user_id: string;
+  pizza?: Pizza;
+};
+
 export type InventoryItem = {
   id: string;
   name: string;
@@ -40,5 +50,5 @@ export type InventoryItem = {
   created_at?: string;
   updated_at?: string;
   user_id?: string;
-  expiryDate?: string; // Added optional expiryDate property
+  expiryDate?: string;
 };

@@ -1,12 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePizzas } from "@/queries/pizzaQueries";
-import { Euro, Package, TrendingUp, TrendingDown } from "lucide-react";
+import { Euro, TrendingUp, TrendingDown } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { format, startOfWeek, eachDayOfInterval, endOfWeek } from "date-fns";
-import { it } from 'date-fns/locale';
-import { Line, CartesianGrid, XAxis, YAxis, ComposedChart, ResponsiveContainer } from "recharts";
+import SalesChart from "@/components/dashboard/SalesChart";
+import PizzaRankings from "@/components/dashboard/PizzaRankings";
 
 const Dashboard = () => {
   const { data: pizzas = [] } = usePizzas();
@@ -27,55 +26,30 @@ const Dashboard = () => {
     return acc + (sale.price_at_time * sale.quantity);
   }, 0);
 
-  // Calculate total pizzas sold from sales
-  const totalPizzasSold = sales.reduce((acc, sale) => acc + sale.quantity, 0);
-
   // Calculate costs from ingredients used
-  const totalCosts = sales.reduce((acc, sale) => {
-    const pizza = pizzas.find(p => p.id === sale.pizza_id);
-    if (!pizza) return acc;
-    
+  const pizzaCosts: Record<string, number> = {};
+  pizzas.forEach(pizza => {
     const pizzaCost = (pizza.pizza_ingredients || []).reduce((ingredientAcc, ingredient) => {
       const inventoryItem = inventory.find(item => item.id === ingredient.ingredient_id);
       if (!inventoryItem) return ingredientAcc;
       return ingredientAcc + (ingredient.quantity * inventoryItem.cost_per_unit);
     }, 0);
-    
+    pizzaCosts[pizza.id] = pizzaCost;
+  });
+
+  const totalCosts = sales.reduce((acc, sale) => {
+    const pizzaCost = pizzaCosts[sale.pizza_id || ''] || 0;
     return acc + (pizzaCost * sale.quantity);
   }, 0);
 
   // Calculate profit
   const profit = totalRevenue - totalCosts;
 
-  // Prepare data for the chart
-  const today = new Date();
-  const weekStart = startOfWeek(today, { weekStartsOn: 1 });
-  const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
-  
-  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
-  
-  const salesData = weekDays.map(day => {
-    const dayStart = new Date(day.setHours(0, 0, 0, 0));
-    const dayEnd = new Date(day.setHours(23, 59, 59, 999));
-    
-    const daySales = sales.filter(sale => {
-      const saleDate = new Date(sale.created_at);
-      return saleDate >= dayStart && saleDate <= dayEnd;
-    });
-
-    const totalSales = daySales.reduce((acc, sale) => acc + sale.quantity, 0);
-
-    return {
-      name: format(day, 'EEE', { locale: it }),
-      sales: totalSales
-    };
-  });
-
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-green-700 dark:text-green-100">Ricavi Totali</CardTitle>
@@ -107,32 +81,14 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Vendite Settimanali</CardTitle>
-        </CardHeader>
-        <CardContent className="h-[400px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={salesData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="name"
-                type="category"
-                allowDuplicatedCategory={false}
-              />
-              <YAxis />
-              <Line 
-                type="monotone" 
-                dataKey="sales" 
-                stroke="#8884d8"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+      <div className="grid gap-6 md:grid-cols-2">
+        <SalesChart sales={sales} />
+        <PizzaRankings 
+          sales={sales} 
+          pizzas={pizzas}
+          costs={pizzaCosts}
+        />
+      </div>
     </div>
   );
 };
