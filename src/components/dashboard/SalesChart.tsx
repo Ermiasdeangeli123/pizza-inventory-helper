@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Line, CartesianGrid, XAxis, YAxis, ComposedChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Line, CartesianGrid, XAxis, YAxis, LineChart, ResponsiveContainer, Tooltip } from "recharts";
 import { format, subDays, startOfDay, endOfDay, eachDayOfInterval } from "date-fns";
 import { it } from 'date-fns/locale';
 import type { Sale } from "@/types/menu";
@@ -33,12 +33,10 @@ const SalesChart = ({ sales }: SalesChartProps) => {
     });
 
     const totalSales = daySales.reduce((acc, sale) => acc + sale.quantity, 0);
-    const totalRevenue = daySales.reduce((acc, sale) => acc + (sale.price_at_time * sale.quantity), 0);
 
     return {
       name: format(day, 'dd/MM', { locale: it }),
-      vendite: totalSales,
-      ricavi: totalRevenue
+      vendite: totalSales
     };
   });
 
@@ -62,18 +60,16 @@ const SalesChart = ({ sales }: SalesChartProps) => {
       </CardHeader>
       <CardContent className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={salesData}>
+          <LineChart data={salesData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="name"
               type="category"
               allowDuplicatedCategory={false}
             />
-            <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-            <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+            <YAxis />
             <Tooltip />
             <Line 
-              yAxisId="left"
               type="monotone" 
               dataKey="vendite" 
               stroke="#8884d8"
@@ -81,16 +77,7 @@ const SalesChart = ({ sales }: SalesChartProps) => {
               dot={{ r: 4 }}
               name="Pizze Vendute"
             />
-            <Line 
-              yAxisId="right"
-              type="monotone" 
-              dataKey="ricavi" 
-              stroke="#82ca9d"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              name="Ricavi (€)"
-            />
-          </ComposedChart>
+          </LineChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
