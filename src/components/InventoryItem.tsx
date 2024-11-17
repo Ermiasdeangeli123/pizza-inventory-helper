@@ -10,6 +10,7 @@ import { it } from 'date-fns/locale';
 import { useUpdateInventory } from "@/queries/inventoryQueries";
 import { toast } from "sonner";
 import type { InventoryItem as InventoryItemType } from "@/lib/data";
+import { getItemImage } from "@/lib/itemImages";
 
 interface InventoryItemProps {
   item: InventoryItemType;
@@ -69,90 +70,99 @@ const InventoryItem = ({
 
   return (
     <div className={`p-4 rounded-lg border ${isLowStock ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}>
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold">{item.name}</h3>
-        <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)}>
-          {isEditing ? "Annulla" : "Modifica"}
-        </Button>
-      </div>
-
-      <div className="space-y-2">
-        {isEditing ? (
-          <>
-            <div>
-              <Label>Quantità ({item.unit})</Label>
-              <Input
-                type="number"
-                value={newQuantity}
-                onChange={(e) => setNewQuantity(e.target.value)}
-                className="w-full"
-              />
-            </div>
-
-            <div>
-              <Label>Costo per {item.unit}</Label>
-              <Input
-                type="number"
-                value={newCostPerUnit}
-                onChange={(e) => setNewCostPerUnit(e.target.value)}
-                className="w-full"
-                step="0.01"
-                min="0"
-              />
-            </div>
-            
-            <div>
-              <Label>Data di scadenza</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={`w-full justify-start text-left font-normal ${
-                      !selectedDate && "text-muted-foreground"
-                    }`}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? (
-                      format(selectedDate, "PPP", { locale: it })
-                    ) : (
-                      "Seleziona data"
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <Button onClick={handleSave} className="w-full">
-              Salva
+      <div className="flex items-start gap-4">
+        <img
+          src={getItemImage(item.name, item.category)}
+          alt={item.name}
+          className="w-16 h-16 object-cover rounded-lg"
+        />
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-semibold">{item.name}</h3>
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)}>
+              {isEditing ? "Annulla" : "Modifica"}
             </Button>
-          </>
-        ) : (
-          <>
-            <p>
-              Quantità: <span className="font-medium">{item.quantity} {item.unit}</span>
-              {isLowStock && (
-                <span className="text-red-600 ml-2">(Scorta bassa)</span>
-              )}
-            </p>
-            {item.expiryDate && (
-              <p>
-                Scadenza:{" "}
-                <span className={`font-medium ${isExpiringSoon ? 'text-red-600' : ''}`}>
-                  {format(new Date(item.expiryDate), "PPP", { locale: it })}
-                  {isExpiringSoon && " (In scadenza)"}
-                </span>
-              </p>
+          </div>
+
+          <div className="space-y-2">
+            {isEditing ? (
+              <>
+                <div>
+                  <Label>Quantità ({item.unit})</Label>
+                  <Input
+                    type="number"
+                    value={newQuantity}
+                    onChange={(e) => setNewQuantity(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+
+                <div>
+                  <Label>Costo per {item.unit}</Label>
+                  <Input
+                    type="number"
+                    value={newCostPerUnit}
+                    onChange={(e) => setNewCostPerUnit(e.target.value)}
+                    className="w-full"
+                    step="0.01"
+                    min="0"
+                  />
+                </div>
+                
+                <div>
+                  <Label>Data di scadenza</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal ${
+                          !selectedDate && "text-muted-foreground"
+                        }`}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? (
+                          format(selectedDate, "PPP", { locale: it })
+                        ) : (
+                          "Seleziona data"
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <Button onClick={handleSave} className="w-full">
+                  Salva
+                </Button>
+              </>
+            ) : (
+              <>
+                <p>
+                  Quantità: <span className="font-medium">{item.quantity} {item.unit}</span>
+                  {isLowStock && (
+                    <span className="text-red-600 ml-2">(Scorta bassa)</span>
+                  )}
+                </p>
+                {item.expiryDate && (
+                  <p>
+                    Scadenza:{" "}
+                    <span className={`font-medium ${isExpiringSoon ? 'text-red-600' : ''}`}>
+                      {format(new Date(item.expiryDate), "PPP", { locale: it })}
+                      {isExpiringSoon && " (In scadenza)"}
+                    </span>
+                  </p>
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
