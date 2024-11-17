@@ -5,6 +5,7 @@ const imageMap: Record<string, string> = {
   'Farina Manitoba': 'photo-1603566123304-56c5a14d6d3f',
   'Farina Integrale': 'photo-1603566123304-56c5a14d6d3f',
   'Lievito': 'photo-1509440159596-0249088772ff',
+  'Lievito Madre': 'photo-1509440159596-0249088772ff',
   'Sale': 'photo-1518110925495-7f3e066d3e14',
   'Olio Extra Vergine': 'photo-1474979266404-7eaacbcd87c5',
   'Semola': 'photo-1603566123304-56c5a14d6d3f',
