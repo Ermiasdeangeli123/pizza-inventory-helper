@@ -1,25 +1,25 @@
 // Map of item names to Unsplash image IDs
 const imageMap: Record<string, string> = {
   // Base
-  'Farina 00': 'photo-1603566123304-56c5a14d6d3f',
+  'Farina 00': 'photo-1509440159596-0249088772ff',
   'Farina Manitoba': 'photo-1568254183919-78a4f43a2877',
   'Farina Integrale': 'photo-1586444248902-2f64eddc13df',
-  'Lievito': 'photo-1509440159596-0249088772ff',
+  'Lievito': 'photo-1591981131950-cda44dc5b5f4',
   'Lievito Madre': 'photo-1591981131950-cda44dc5b5f4',
   'Sale': 'photo-1518110925495-7f3e066d3e14',
   'Olio Extra Vergine': 'photo-1474979266404-7eaacbcd87c5',
   'Semola': 'photo-1562411052-105105232432',
 
   // Dairy
-  'Mozzarella': 'photo-1618164436241-4473940d1f5c',
+  'Mozzarella': 'photo-1573821663314-6dec35e8c571',
   'Mozzarella di Bufala': 'photo-1573821663314-6dec35e8c571',
-  'Grana Padano': 'photo-1486297678162-eb2a19b0a32d',
+  'Grana Padano': 'photo-1528747045269-390fe33c19f2',
   'Parmigiano Reggiano': 'photo-1528747045269-390fe33c19f2',
   'Gorgonzola': 'photo-1452195100486-9cc805987862',
   'Ricotta': 'photo-1551489186-cf8726f514f8',
   'Scamorza Affumicata': 'photo-1634487359989-3e90c9432133',
   'Provola': 'photo-1634487134969-1c72c5b1a36c',
-  'Burrata': 'photo-1573821663314-6dec35e8c571',
+  'Burrata': 'photo-1590068897280-dead9a6df481',
   'Stracciatella': 'photo-1590068897280-dead9a6df481',
 
   // Meats
@@ -72,7 +72,7 @@ const imageMap: Record<string, string> = {
 // Default images for each category
 const categoryDefaultImages: Record<string, string> = {
   base: 'photo-1603566123304-56c5a14d6d3f', // Flour image
-  dairy: 'photo-1486297678162-eb2a19b0a32d', // Cheese image
+  dairy: 'photo-1573821663314-6dec35e8c571', // Cheese image
   meats: 'photo-1542901031-ec5eeb518506', // Cold cuts image
   vegetables: 'photo-1506073881649-4e23be3e9ed0', // Vegetables image
   other: 'photo-1599940778173-e276d4acb2bb', // Generic food image
