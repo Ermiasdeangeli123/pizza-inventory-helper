@@ -317,6 +317,10 @@ export type Database = {
       }
     }
     Functions: {
+      populate_data_for_all_users: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       populate_data_for_user: {
         Args: {
           input_user_id: string
