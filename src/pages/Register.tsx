@@ -12,6 +12,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [restaurantName, setRestaurantName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,19 +26,22 @@ const Register = () => {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          data: {
+            restaurant_name: restaurantName
+          },
           emailRedirectTo: `${window.location.origin}/profits`
         }
       });
 
-      if (error) {
-        if (error.message.includes('email') || error.message.includes('Email')) {
+      if (signUpError) {
+        if (signUpError.message.includes('email') || signUpError.message.includes('Email')) {
           toast.error("Per lo sviluppo, è necessario abilitare la registrazione nella console Supabase. Vai su Authentication > Settings e disabilita 'Confirm email'.");
         } else {
-          toast.error(error.message);
+          toast.error(signUpError.message);
         }
         return;
       }
@@ -58,6 +62,15 @@ const Register = () => {
           <Logo />
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Input 
+              type="text"
+              placeholder="Nome Pizzeria" 
+              value={restaurantName}
+              onChange={(e) => setRestaurantName(e.target.value)}
+              required 
+            />
+          </div>
           <div>
             <Input 
               type="email" 
