@@ -32,8 +32,7 @@ const Register = () => {
         options: {
           data: {
             restaurant_name: restaurantName
-          },
-          emailRedirectTo: `${window.location.origin}/profits`
+          }
         }
       });
 
@@ -46,7 +45,7 @@ const Register = () => {
         return;
       }
 
-      toast.success("Registrazione completata con successo! Controlla la tua email per confermare.");
+      toast.success("Registrazione completata con successo!");
       navigate("/login");
     } catch (error: any) {
       toast.error(error.message);

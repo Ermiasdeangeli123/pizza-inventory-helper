@@ -153,7 +153,6 @@ export type Database = {
         Row: {
           created_at: string | null
           currency: string | null
-          first_name: string | null
           id: string
           restaurant_name: string | null
           subscription_end_date: string | null
@@ -163,7 +162,6 @@ export type Database = {
         Insert: {
           created_at?: string | null
           currency?: string | null
-          first_name?: string | null
           id: string
           restaurant_name?: string | null
           subscription_end_date?: string | null
@@ -173,7 +171,6 @@ export type Database = {
         Update: {
           created_at?: string | null
           currency?: string | null
-          first_name?: string | null
           id?: string
           restaurant_name?: string | null
           subscription_end_date?: string | null

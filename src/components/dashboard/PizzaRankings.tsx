@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useCurrency } from "@/hooks/useCurrency";
 import type { Pizza, Sale } from "@/types/menu";
 
 interface PizzaRankingsProps {
@@ -9,6 +10,8 @@ interface PizzaRankingsProps {
 }
 
 const PizzaRankings = ({ sales, pizzas, costs }: PizzaRankingsProps) => {
+  const { formatPrice } = useCurrency();
+  
   const pizzaStats = pizzas.map(pizza => {
     const pizzaSales = sales.filter(sale => sale.pizza_id === pizza.id);
     const totalQuantity = pizzaSales.reduce((acc, sale) => acc + sale.quantity, 0);
@@ -45,8 +48,8 @@ const PizzaRankings = ({ sales, pizzas, costs }: PizzaRankingsProps) => {
               <TableRow key={pizza.id}>
                 <TableCell className="font-medium">{pizza.name}</TableCell>
                 <TableCell className="text-right">{pizza.quantity}</TableCell>
-                <TableCell className="text-right">€{pizza.revenue.toFixed(2)}</TableCell>
-                <TableCell className="text-right">€{pizza.profit.toFixed(2)}</TableCell>
+                <TableCell className="text-right">{formatPrice(pizza.revenue)}</TableCell>
+                <TableCell className="text-right">{formatPrice(pizza.profit)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
