@@ -12,9 +12,17 @@ const WasteReport = () => {
   // Calcola le statistiche sugli sprechi
   const wasteStats = inventory.map(item => {
     const consumed = item.initial_quantity - item.quantity;
-    const consumedPercentage = (consumed / item.initial_quantity) * 100;
+    const consumedPercentage = item.initial_quantity > 0 
+      ? (consumed / item.initial_quantity) * 100 
+      : 0;
     const isExpired = item.expiry_date && new Date(item.expiry_date) < new Date();
-    const wastedValue = isExpired ? item.quantity * item.cost_per_unit : 0;
+    
+    // Calcola il valore sprecato
+    const wastedValue = isExpired 
+      ? item.quantity * item.cost_per_unit // Se scaduto, tutto il rimanente è sprecato
+      : consumedPercentage < 10 && consumed > 0
+        ? consumed * item.cost_per_unit // Se consumo basso, consideriamo sprecato il consumato
+        : 0;
 
     return {
       ...item,
@@ -28,9 +36,9 @@ const WasteReport = () => {
   // Calcola il totale del valore sprecato
   const totalWaste = wasteStats.reduce((acc, item) => acc + item.wastedValue, 0);
 
-  // Filtra gli elementi scaduti o con consumo anomalo
+  // Filtra gli elementi scaduti o con consumo anomalo (< 10%)
   const itemsToWatch = wasteStats.filter(
-    item => item.isExpired || item.consumedPercentage < 10
+    item => item.isExpired || (item.consumedPercentage < 10 && item.consumed > 0)
   );
 
   return (
