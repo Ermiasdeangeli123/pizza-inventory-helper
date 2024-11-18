@@ -1,19 +1,32 @@
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import Logo from "@/components/Logo";
+import { 
+  Clock, 
+  TrendingUp, 
+  CheckCircle2,
+  Smartphone,
+  Calendar
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { Link } from "react-router-dom";
 import FAQSection from "@/components/landing/FAQSection";
-import Logo from "@/components/Logo";
 
 const Landing = () => {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleGetStarted = () => {
+    toast.success("Benvenuto! Iniziamo a gestire la tua pizzeria.");
+    window.location.href = "/register";
+  };
+
+  const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!email) {
+      toast.error("Inserisci un'email valida");
+      return;
+    }
 
     try {
       const { error } = await supabase
@@ -22,172 +35,118 @@ const Landing = () => {
 
       if (error) throw error;
 
-      toast.success("Grazie! Ti contatteremo presto.");
+      toast.success("Grazie per l'iscrizione! Ti terremo aggiornato.");
       setEmail("");
     } catch (error) {
-      console.error('Error:', error);
       toast.error("Si è verificato un errore. Riprova più tardi.");
-    } finally {
-      setLoading(false);
     }
   };
 
+  const features = [
+    {
+      icon: Clock,
+      title: "Risparmio di Tempo",
+      description: "Automatizza la gestione dell'inventario e risparmia fino al 50% del tempo"
+    },
+    {
+      icon: CheckCircle2,
+      title: "Zero Errori",
+      description: "Elimina gli errori manuali con la digitalizzazione completa"
+    },
+    {
+      icon: Calendar,
+      title: "Gestione Scadenze",
+      description: "Monitora le date di scadenza e riduci gli sprechi con notifiche automatiche"
+    },
+    {
+      icon: Smartphone,
+      title: "Accesso Ovunque",
+      description: "Controlla il tuo business in tempo reale da qualsiasi dispositivo"
+    }
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
-        <Link to="/" className="flex items-center justify-center">
-          <Logo className="h-8 w-8" />
-          <span className="sr-only">Pizza Manager</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            to="/login"
-          >
-            Accedi
-          </Link>
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            to="/register"
-          >
-            Registrati
-          </Link>
-        </nav>
-      </header>
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Gestisci la tua pizzeria con semplicità
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Monitora ricavi, costi e profitti in tempo reale. Ottimizza il tuo business con un gestionale intuitivo e completo.
-                </p>
-              </div>
-              <div className="w-full max-w-sm space-y-2">
-                <form
-                  className="flex space-x-2"
-                  onSubmit={handleSubmit}
-                >
-                  <Input
-                    className="max-w-lg flex-1"
-                    placeholder="Inserisci la tua email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  <Button type="submit" disabled={loading}>
-                    {loading ? "..." : "Unisciti"}
-                  </Button>
-                </form>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Unisciti alla lista d'attesa per accedere alla beta.
-                </p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-50">
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center max-w-4xl mx-auto mb-16">
+          <div className="flex justify-center mb-8">
+            <Logo />
           </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-10 sm:px-10">
-              <div className="space-y-4 text-center">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Caratteristiche Principali
-                </h2>
-                <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  Tutto ciò di cui hai bisogno per gestire la tua pizzeria in modo efficiente.
-                </p>
-              </div>
-              <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
-                <div className="flex flex-col items-center space-y-2 border rounded-lg p-4">
-                  <div className="p-2 bg-green-500 text-white rounded-full">
-                    <svg
-                      className=" h-6 w-6"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M12 2v20" />
-                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold">Gestione Finanziaria</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    Monitora ricavi, costi e profitti in tempo reale per ogni pizza venduta.
-                  </p>
-                </div>
-                <div className="flex flex-col items-center space-y-2 border rounded-lg p-4">
-                  <div className="p-2 bg-blue-500 text-white rounded-full">
-                    <svg
-                      className=" h-6 w-6"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold">Analisi delle Vendite</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    Visualizza statistiche dettagliate e trend delle vendite per periodo.
-                  </p>
-                </div>
-                <div className="flex flex-col items-center space-y-2 border rounded-lg p-4">
-                  <div className="p-2 bg-purple-500 text-white rounded-full">
-                    <svg
-                      className=" h-6 w-6"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold">Gestione Inventario</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    Tieni traccia degli ingredienti e ricevi notifiche per il riordino.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+            La Soluzione Completa per Gestire la tua Pizzeria
+          </h1>
+          <p className="text-xl text-orange-900/70 mb-8">
+            Gestisci il tuo inventario, il menu e i profitti in un'unica app. 
+            Ottimizza il tuo business con strumenti professionali pensati per le pizzerie.
+          </p>
+          
+          <div className="flex gap-4 justify-center mb-12">
+            <Button 
+              size="lg"
+              className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
+              onClick={handleGetStarted}
+            >
+              Prova Gratis per 30 Giorni
+            </Button>
           </div>
-        </section>
+
+          {/* Video Demo */}
+          <div className="aspect-video bg-white rounded-xl shadow-lg mb-16">
+            <iframe 
+              className="w-full h-full rounded-xl"
+              src="https://www.youtube.com/embed/fXuFpB0Y030"
+              title="PizzaLova Demo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {features.map((feature, index) => (
+            <div key={index} className="bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg border border-orange-100">
+              <feature.icon className="w-12 h-12 text-red-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2 text-red-700">{feature.title}</h3>
+              <p className="text-orange-900/70">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* FAQ Section */}
         <FAQSection />
-      </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 Pizza Manager. Tutti i diritti riservati.
-        </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" to="#">
-            Termini di Servizio
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4" to="#">
-            Privacy
-          </Link>
-        </nav>
-      </footer>
+
+        {/* Newsletter Section */}
+        <div className="max-w-2xl mx-auto text-center mb-16">
+          <h2 className="text-3xl font-bold mb-4 text-red-800">
+            Resta Aggiornato
+          </h2>
+          <p className="text-lg mb-6 text-gray-700">
+            Iscriviti alla nostra newsletter per ricevere consigli sulla gestione della tua pizzeria
+          </p>
+          <form onSubmit={handleWaitlist} className="flex gap-4 justify-center">
+            <Input
+              type="email"
+              placeholder="La tua email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="max-w-sm"
+            />
+            <Button type="submit">Iscriviti</Button>
+          </form>
+        </div>
+
+        {/* Final CTA */}
+        <div className="text-center">
+          <Button 
+            size="lg"
+            onClick={handleGetStarted}
+            className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
+          >
+            Inizia Ora la Prova Gratuita
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
