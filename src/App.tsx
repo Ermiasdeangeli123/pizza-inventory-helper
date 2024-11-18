@@ -15,6 +15,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 import Shopping from "./pages/Shopping";
+import Rankings from "./pages/Rankings";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -102,6 +103,10 @@ const App = () => {
               <Route
                 path="/account"
                 element={session ? <Account /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/rankings"
+                element={session ? <Rankings /> : <Navigate to="/login" />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

@@ -11,7 +11,7 @@ import type { ProfilesTable } from "@/integrations/supabase/types/profiles";
 
 interface Profile {
   first_name: string | null;
-  last_name: string | null;
+  restaurant_name: string | null;
   currency: string;
 }
 
@@ -20,7 +20,7 @@ const Account = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Profile>({
     first_name: "",
-    last_name: "",
+    restaurant_name: "",
     currency: "EUR"
   });
 
@@ -31,16 +31,16 @@ const Account = () => {
 
         const { data, error } = await supabase
           .from("profiles")
-          .select("first_name, last_name, currency")
+          .select("first_name, restaurant_name, currency")
           .eq("id", session.user.id)
-          .single<Pick<ProfilesTable['Row'], 'first_name' | 'last_name' | 'currency'>>();
+          .single<Pick<ProfilesTable['Row'], 'first_name' | 'restaurant_name' | 'currency'>>();
 
         if (error) throw error;
 
         if (data) {
           setProfile({
             first_name: data.first_name,
-            last_name: data.last_name,
+            restaurant_name: data.restaurant_name,
             currency: data.currency || "EUR"
           });
         }
@@ -62,7 +62,7 @@ const Account = () => {
         .from("profiles")
         .update({
           first_name: profile.first_name,
-          last_name: profile.last_name,
+          restaurant_name: profile.restaurant_name,
           currency: profile.currency,
           updated_at: new Date().toISOString(),
         })
@@ -97,12 +97,12 @@ const Account = () => {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="last_name">Cognome</Label>
+            <Label htmlFor="restaurant_name">Nome Ristorante</Label>
             <Input
-              id="last_name"
+              id="restaurant_name"
               type="text"
-              value={profile.last_name || ""}
-              onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
+              value={profile.restaurant_name || ""}
+              onChange={(e) => setProfile({ ...profile, restaurant_name: e.target.value })}
             />
           </div>
 

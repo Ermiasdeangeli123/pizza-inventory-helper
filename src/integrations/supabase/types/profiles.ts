@@ -4,7 +4,7 @@ export interface ProfilesTable extends BaseTable {
   Row: {
     id: string;
     first_name: string | null;
-    last_name: string | null;
+    restaurant_name: string | null;
     subscription_status: string | null;
     subscription_end_date: string | null;
     created_at: string | null;
@@ -14,7 +14,7 @@ export interface ProfilesTable extends BaseTable {
   Insert: {
     id: string;
     first_name?: string | null;
-    last_name?: string | null;
+    restaurant_name?: string | null;
     subscription_status?: string | null;
     subscription_end_date?: string | null;
     created_at?: string | null;
@@ -24,7 +24,7 @@ export interface ProfilesTable extends BaseTable {
   Update: {
     id?: string;
     first_name?: string | null;
-    last_name?: string | null;
+    restaurant_name?: string | null;
     subscription_status?: string | null;
     subscription_end_date?: string | null;
     created_at?: string | null;
