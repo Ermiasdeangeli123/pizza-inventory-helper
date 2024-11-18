@@ -4,7 +4,7 @@ import Logo from "@/components/Logo";
 import { 
   Clock, 
   TrendingUp, 
-  CheckCircle2,
+  DollarSign,
   Smartphone,
   Calendar
 } from "lucide-react";
@@ -49,9 +49,9 @@ const Landing = () => {
       description: "Automatizza la gestione dell'inventario e risparmia fino al 50% del tempo"
     },
     {
-      icon: CheckCircle2,
-      title: "Zero Errori",
-      description: "Elimina gli errori manuali con la digitalizzazione completa"
+      icon: DollarSign,
+      title: "Gestione Finanziaria",
+      description: "Monitora ricavi, costi e profitti in tempo reale per ottimizzare il tuo business"
     },
     {
       icon: Calendar,
