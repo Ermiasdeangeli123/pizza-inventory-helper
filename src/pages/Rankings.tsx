@@ -1,23 +1,16 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { RestaurantRankingsView } from "@/integrations/supabase/types/rankings";
 
-type TimeRange = "daily" | "weekly" | "monthly";
-
 const Rankings = () => {
-  const [timeRange, setTimeRange] = useState<TimeRange>("daily");
-
   const { data: rankings = [], isLoading } = useQuery({
-    queryKey: ["rankings", timeRange],
+    queryKey: ["rankings"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('restaurant_rankings')
         .select('restaurant_name, total_quantity')
-        .eq('period_type', timeRange)
         .order('total_quantity', { ascending: false });
 
       if (error) throw error;
@@ -28,21 +21,8 @@ const Rankings = () => {
   return (
     <div className="p-6">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardHeader>
           <CardTitle>Classifica Ristoranti</CardTitle>
-          <Select
-            value={timeRange}
-            onValueChange={(value: TimeRange) => setTimeRange(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Seleziona periodo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="daily">Giornaliero</SelectItem>
-              <SelectItem value="weekly">Settimanale</SelectItem>
-              <SelectItem value="monthly">Mensile</SelectItem>
-            </SelectContent>
-          </Select>
         </CardHeader>
         <CardContent>
           <Table>
