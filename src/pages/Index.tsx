@@ -63,7 +63,7 @@ const Index = () => {
   const inventory: InventoryItem[] = inventoryData?.map(item => ({
     id: item.id,
     name: item.name,
-    category: item.category_id || '',
+    category: item.category_id || 'other', // Default to 'other' if no category
     quantity: item.quantity,
     unit: item.unit,
     minStock: item.min_stock,
@@ -114,7 +114,11 @@ const Index = () => {
           <CategorySection
             key={category.id}
             category={category}
-            items={inventory.filter((item) => item.category === category.id)}
+            items={inventory.filter((item) => 
+              category.id === 'other' 
+                ? item.category === 'other' || !item.category
+                : item.category === category.id
+            )}
             onUpdateQuantity={handleUpdateQuantity}
             onAddItem={handleAddItem}
             onUpdateCost={handleUpdateCost}
