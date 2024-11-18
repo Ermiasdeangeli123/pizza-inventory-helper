@@ -34,11 +34,11 @@ export type Database = {
   };
 };
 
-export type * from './base';
-export type * from './categories';
-export type * from './inventory';
-export type * from './pizzas';
-export type * from './profiles';
-export type * from './sales';
-export type * from './waitlist';
-export type * from './rankings';
+export type { Json } from './base';
+export type { CategoriesTable } from './categories';
+export type { InventoryTable } from './inventory';
+export type { PizzasTable, PizzaIngredientsTable } from './pizzas';
+export type { ProfilesTable } from './profiles';
+export type { SalesTable } from './sales';
+export type { WaitlistTable } from './waitlist';
+export type { RestaurantRankingsView } from './rankings';
