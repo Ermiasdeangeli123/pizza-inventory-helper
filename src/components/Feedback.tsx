@@ -4,6 +4,7 @@ import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@supabase/auth-helpers-react";
+import type { TablesInsert } from "@/integrations/supabase/types";
 
 export const Feedback = () => {
   const [feedback, setFeedback] = useState("");
@@ -18,12 +19,14 @@ export const Feedback = () => {
 
     setIsSubmitting(true);
     try {
+      const feedbackData: TablesInsert<"feedback"> = {
+        content: feedback,
+        user_id: session?.user?.id as string
+      };
+
       const { error } = await supabase
         .from('feedback')
-        .insert({
-          content: feedback,
-          user_id: session?.user?.id
-        });
+        .insert(feedbackData);
 
       if (error) throw error;
 
