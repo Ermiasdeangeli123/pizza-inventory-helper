@@ -27,6 +27,7 @@ const InventoryItem = ({
   const [isEditing, setIsEditing] = useState(false);
   const [newQuantity, setNewQuantity] = useState(item.quantity.toString());
   const [newCostPerUnit, setNewCostPerUnit] = useState(item.costPerUnit.toString());
+  const [newMinStock, setNewMinStock] = useState(item.minStock.toString());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     item.expiryDate ? new Date(item.expiryDate) : undefined
   );
@@ -37,6 +38,7 @@ const InventoryItem = ({
     const updates = {
       quantity: parseFloat(newQuantity),
       cost_per_unit: parseFloat(newCostPerUnit),
+      min_stock: parseFloat(newMinStock),
       expiry_date: selectedDate
     };
 
@@ -101,6 +103,18 @@ const InventoryItem = ({
                   min="0"
                 />
               </div>
+
+              <div>
+                <Label>Scorta minima ({item.unit})</Label>
+                <Input
+                  type="number"
+                  value={newMinStock}
+                  onChange={(e) => setNewMinStock(e.target.value)}
+                  className="w-full"
+                  min="0"
+                  step="0.1"
+                />
+              </div>
               
               <div>
                 <Label>Data di scadenza</Label>
@@ -142,6 +156,9 @@ const InventoryItem = ({
                 {isLowStock && (
                   <span className="text-red-600 ml-2">(Scorta bassa)</span>
                 )}
+              </p>
+              <p>
+                Scorta minima: <span className="font-medium">{item.minStock} {item.unit}</span>
               </p>
               {item.expiryDate && (
                 <p>

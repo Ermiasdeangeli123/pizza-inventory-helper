@@ -82,6 +82,9 @@ const CategorySection = ({
     toast.success("Alimento aggiunto con successo");
   };
 
+  // Sort items alphabetically by name
+  const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
@@ -159,7 +162,7 @@ const CategorySection = ({
         </Dialog>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <InventoryItemComponent
             key={item.id}
             item={item}
