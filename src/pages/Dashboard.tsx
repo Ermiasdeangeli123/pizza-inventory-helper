@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import SalesTable from "@/components/sales/SalesTable";
 import { useAddSale } from "@/queries/salesQueries";
 import SalesChart from "@/components/dashboard/SalesChart";
+import CostAnalysis from "@/components/dashboard/CostAnalysis";
+import WasteReport from "@/components/dashboard/WasteReport";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
@@ -124,6 +126,11 @@ const Dashboard = () => {
             <div className={`text-2xl font-bold ${profit >= 0 ? 'text-blue-700 dark:text-blue-100' : 'text-red-700 dark:text-red-100'}`}>€{profit.toFixed(2)}</div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <CostAnalysis />
+        <WasteReport />
       </div>
 
       <Card>
