@@ -31,7 +31,6 @@ const Navigation = ({ session }: NavigationProps) => {
   const menuItems = [
     { path: "/dashboard", label: "Dashboard" },
     { path: "/inventory", label: "Inventario" },
-    { path: "/sales", label: "Vendite" },
     { path: "/menu", label: "Menu" },
     { path: "/shopping", label: "Lista Spesa" },
     { path: "/rankings", label: "Classifica" },

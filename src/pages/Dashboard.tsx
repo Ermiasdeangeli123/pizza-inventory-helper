@@ -4,12 +4,15 @@ import { Euro, TrendingUp, TrendingDown } from "lucide-react";
 import { useSales } from "@/queries/salesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import SalesTable from "@/components/sales/SalesTable";
+import { useAddSale } from "@/queries/salesQueries";
 import SalesChart from "@/components/dashboard/SalesChart";
-import PizzaRankings from "@/components/dashboard/PizzaRankings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
-  const { data: pizzas = [] } = usePizzas();
+  const { data: pizzas = [], isLoading } = usePizzas();
   const { data: sales = [] } = useSales();
+  const addSale = useAddSale();
   const { data: inventory = [] } = useQuery({
     queryKey: ['inventory'],
     queryFn: async () => {
@@ -45,9 +48,51 @@ const Dashboard = () => {
   // Calculate profit
   const profit = totalRevenue - totalCosts;
 
+  const handleIncrement = (id: string) => {
+    const pizza = pizzas?.find((p) => p.id === id);
+    if (!pizza) return;
+
+    addSale.mutate({
+      pizzaId: id,
+      quantity: 1,
+      priceAtTime: pizza.price
+    });
+  };
+
+  const handleDecrement = (id: string) => {
+    const pizza = pizzas?.find((p) => p.id === id);
+    if (!pizza) return;
+
+    addSale.mutate({
+      pizzaId: id,
+      quantity: -1,
+      priceAtTime: pizza.price
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-8 space-y-8">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid gap-4 md:grid-cols-3">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+        </div>
+      </div>
+    );
+  }
+
+  // Add count to pizzas based on sales
+  const pizzasWithCount = pizzas.map(pizza => ({
+    ...pizza,
+    count: sales.filter(sale => sale.pizza_id === pizza.id)
+      .reduce((acc, sale) => acc + sale.quantity, 0)
+  }));
+
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+      <h1 className="text-3xl font-bold">Dashboard</h1>
       
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
@@ -81,14 +126,20 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <SalesChart sales={sales} />
-        <PizzaRankings 
-          sales={sales} 
-          pizzas={pizzas}
-          costs={pizzaCosts}
-        />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Vendite</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SalesTable
+            pizzas={pizzasWithCount}
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
+          />
+        </CardContent>
+      </Card>
+
+      <SalesChart sales={sales} />
     </div>
   );
 };

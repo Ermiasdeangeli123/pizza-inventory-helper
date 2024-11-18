@@ -7,7 +7,6 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "./components/Navigation";
 import Index from "./pages/Index";
-import Sales from "./pages/Sales";
 import Menu from "./pages/Menu";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
@@ -87,10 +86,6 @@ const App = () => {
               <Route
                 path="/inventory"
                 element={session ? <Index /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/sales"
-                element={session ? <Sales /> : <Navigate to="/login" />}
               />
               <Route
                 path="/menu"
