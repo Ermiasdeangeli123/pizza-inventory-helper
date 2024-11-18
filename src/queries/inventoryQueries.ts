@@ -17,7 +17,7 @@ export const useInventory = () => {
 
       const { data, error } = await supabase
         .from("inventory")
-        .select("*, category_id")
+        .select("*, category_id, expiry_date")
         .eq("user_id", userId);
 
       if (error) {
@@ -28,32 +28,9 @@ export const useInventory = () => {
 
       if (!data || data.length === 0) {
         console.log("No inventory data found for user:", userId);
-        // Try to populate initial data
-        const { error: populateError } = await supabase
-          .rpc('populate_data_for_user', { input_user_id: userId });
-
-        if (populateError) {
-          console.error("Error populating initial data:", populateError);
-          toast.error("Errore nel caricamento dei dati iniziali");
-          return [];
-        }
-
-        // Fetch data again after population
-        const { data: populatedData, error: refetchError } = await supabase
-          .from("inventory")
-          .select("*, category_id")
-          .eq("user_id", userId);
-
-        if (refetchError) {
-          console.error("Error fetching populated data:", refetchError);
-          toast.error("Errore nel caricamento dell'inventario");
-          return [];
-        }
-
-        return populatedData || [];
       }
 
-      return data;
+      return data || [];
     },
     enabled: !!userId,
     retry: 2,

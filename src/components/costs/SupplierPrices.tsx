@@ -16,9 +16,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
-import type { Database } from "@/integrations/supabase/types";
-
-type Supplier = Database['public']['Tables']['suppliers']['Row'];
 
 const SupplierPrices = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -26,18 +23,16 @@ const SupplierPrices = () => {
   const { data: inventory = [] } = useInventory();
   const session = useSession();
 
-  const { data: suppliers = [] } = useQuery<Supplier[]>({
-    queryKey: ["suppliers", session?.user?.id],
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ["suppliers"],
     queryFn: async () => {
-      if (!session?.user?.id) return [];
-      
       const { data, error } = await supabase
         .from("suppliers")
         .select("*")
-        .eq("user_id", session.user.id);
+        .eq("user_id", session?.user?.id);
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: !!session?.user?.id,
   });
