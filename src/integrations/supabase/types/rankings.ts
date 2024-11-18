@@ -2,12 +2,12 @@ import { BaseTable } from './base';
 
 export interface RestaurantRankingsView {
   Row: {
-    restaurant_id: string;
-    restaurant_name: string;
-    period_start: string;
-    period_type: 'daily' | 'weekly' | 'monthly';
-    pizzas_sold: number;
-    total_quantity: number;
-    total_revenue: number;
+    restaurant_id: string | null;
+    restaurant_name: string | null;
+    period_start: string | null;
+    period_type: string | null;
+    pizzas_sold: number | null;
+    total_quantity: number | null;
+    total_revenue: number | null;
   };
 }
