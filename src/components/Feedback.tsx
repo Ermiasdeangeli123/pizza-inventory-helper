@@ -20,12 +20,10 @@ export const Feedback = () => {
     try {
       const { error } = await supabase
         .from('feedback')
-        .insert([
-          { 
-            content: feedback,
-            user_id: session?.user?.id
-          }
-        ]);
+        .insert({
+          content: feedback,
+          user_id: session?.user?.id
+        });
 
       if (error) throw error;
 

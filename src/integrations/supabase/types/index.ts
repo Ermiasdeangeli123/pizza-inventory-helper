@@ -1,5 +1,6 @@
 import { Json } from './base';
 import { CategoriesTable } from './categories';
+import { FeedbackTable } from './feedback';
 import { InventoryTable } from './inventory';
 import { PizzasTable, PizzaIngredientsTable } from './pizzas';
 import { ProfilesTable } from './profiles';
@@ -11,6 +12,7 @@ export type Database = {
   public: {
     Tables: {
       categories: CategoriesTable;
+      feedback: FeedbackTable;
       inventory: InventoryTable;
       pizzas: PizzasTable;
       pizza_ingredients: PizzaIngredientsTable;
@@ -36,6 +38,7 @@ export type Database = {
 
 export type { Json } from './base';
 export type { CategoriesTable } from './categories';
+export type { FeedbackTable } from './feedback';
 export type { InventoryTable } from './inventory';
 export type { PizzasTable, PizzaIngredientsTable } from './pizzas';
 export type { ProfilesTable } from './profiles';
