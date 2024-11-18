@@ -1,5 +1,3 @@
-import { BaseTable } from './base';
-
 export interface RestaurantRankingsView {
   Row: {
     restaurant_id: string | null;
