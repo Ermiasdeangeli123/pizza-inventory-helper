@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import type { ProfilesTable } from "@/integrations/supabase/types/profiles";
 
 interface Profile {
-  first_name: string | null;
   restaurant_name: string | null;
   currency: string;
 }
@@ -19,7 +18,6 @@ const Account = () => {
   const session = useSession();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Profile>({
-    first_name: "",
     restaurant_name: "",
     currency: "EUR"
   });
@@ -31,15 +29,14 @@ const Account = () => {
 
         const { data, error } = await supabase
           .from("profiles")
-          .select("first_name, restaurant_name, currency")
+          .select("restaurant_name, currency")
           .eq("id", session.user.id)
-          .single<Pick<ProfilesTable['Row'], 'first_name' | 'restaurant_name' | 'currency'>>();
+          .single<Pick<ProfilesTable['Row'], 'restaurant_name' | 'currency'>>();
 
         if (error) throw error;
 
         if (data) {
           setProfile({
-            first_name: data.first_name,
             restaurant_name: data.restaurant_name,
             currency: data.currency || "EUR"
           });
@@ -61,7 +58,6 @@ const Account = () => {
       const { error } = await supabase
         .from("profiles")
         .update({
-          first_name: profile.first_name,
           restaurant_name: profile.restaurant_name,
           currency: profile.currency,
           updated_at: new Date().toISOString(),
@@ -87,22 +83,13 @@ const Account = () => {
         
         <div className="space-y-6">
           <div className="grid gap-2">
-            <Label htmlFor="first_name">Nome</Label>
-            <Input
-              id="first_name"
-              type="text"
-              value={profile.first_name || ""}
-              onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="restaurant_name">Nome Ristorante</Label>
+            <Label htmlFor="restaurant_name">Nome Pizzeria</Label>
             <Input
               id="restaurant_name"
               type="text"
               value={profile.restaurant_name || ""}
               onChange={(e) => setProfile({ ...profile, restaurant_name: e.target.value })}
+              required 
             />
           </div>
 
