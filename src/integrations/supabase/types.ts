@@ -155,7 +155,6 @@ export type Database = {
           currency: string | null
           first_name: string | null
           id: string
-          last_name: string | null
           restaurant_name: string | null
           subscription_end_date: string | null
           subscription_status: string | null
@@ -166,7 +165,6 @@ export type Database = {
           currency?: string | null
           first_name?: string | null
           id: string
-          last_name?: string | null
           restaurant_name?: string | null
           subscription_end_date?: string | null
           subscription_status?: string | null
@@ -177,7 +175,6 @@ export type Database = {
           currency?: string | null
           first_name?: string | null
           id?: string
-          last_name?: string | null
           restaurant_name?: string | null
           subscription_end_date?: string | null
           subscription_status?: string | null
