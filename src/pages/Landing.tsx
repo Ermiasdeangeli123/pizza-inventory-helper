@@ -109,7 +109,7 @@ const Landing = () => {
               className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 transition-colors"
               onClick={handleGetStarted}
             >
-              Prova Gratis per 30 Giorni
+              Prova Gratis
             </Button>
           </div>
 
@@ -163,6 +163,9 @@ const Landing = () => {
 
           {/* Features Grid */}
           <HowItWorks />
+
+          {/* Add spacing before FAQ Section */}
+          <div className="my-16"></div>
 
           {/* FAQ Section */}
           <FAQSection />
