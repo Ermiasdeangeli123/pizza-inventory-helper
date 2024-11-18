@@ -156,6 +156,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          restaurant_name: string | null
           subscription_end_date: string | null
           subscription_status: string | null
           updated_at: string | null
@@ -166,6 +167,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          restaurant_name?: string | null
           subscription_end_date?: string | null
           subscription_status?: string | null
           updated_at?: string | null
@@ -176,6 +178,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          restaurant_name?: string | null
           subscription_end_date?: string | null
           subscription_status?: string | null
           updated_at?: string | null
@@ -237,7 +240,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      restaurant_rankings: {
+        Row: {
+          period_start: string | null
+          period_type: string | null
+          pizzas_sold: number | null
+          restaurant_id: string | null
+          restaurant_name: string | null
+          total_quantity: number | null
+          total_revenue: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       populate_data_for_user: {
