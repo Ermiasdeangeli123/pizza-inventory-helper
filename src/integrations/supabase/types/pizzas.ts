@@ -12,7 +12,7 @@ export interface PizzasTable extends BaseTable {
   Insert: {
     id?: string;
     name: string;
-    price: number;
+    price?: number;
     user_id: string;
     created_at?: string;
     updated_at?: string;
@@ -31,24 +31,24 @@ export interface PizzasTable extends BaseTable {
 export interface PizzaIngredientsTable extends BaseTable {
   Row: {
     id: string;
-    pizza_id: string;
-    ingredient_id: string;
+    pizza_id: string | null;
+    ingredient_id: string | null;
     quantity: number;
     user_id: string;
     created_at: string;
   };
   Insert: {
     id?: string;
-    pizza_id: string;
-    ingredient_id: string;
-    quantity: number;
+    pizza_id?: string | null;
+    ingredient_id?: string | null;
+    quantity?: number;
     user_id: string;
     created_at?: string;
   };
   Update: {
     id?: string;
-    pizza_id?: string;
-    ingredient_id?: string;
+    pizza_id?: string | null;
+    ingredient_id?: string | null;
     quantity?: number;
     user_id?: string;
     created_at?: string;

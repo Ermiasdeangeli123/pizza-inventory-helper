@@ -7,14 +7,5 @@ export type Json =
   | Json[]
 
 export interface BaseTable {
-  Row: Record<string, unknown>;
-  Insert: Record<string, unknown>;
-  Update: Record<string, unknown>;
-  Relationships: Array<{
-    foreignKeyName: string;
-    columns: string[];
-    isOneToOne: boolean;
-    referencedRelation: string;
-    referencedColumns: string[];
-  }>;
+  Relationships: any[];
 }
