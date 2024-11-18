@@ -15,6 +15,7 @@ import { useInventory } from "@/queries/inventoryQueries";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 const SupplierPrices = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -22,9 +23,28 @@ const SupplierPrices = () => {
   const { data: inventory = [] } = useInventory();
   const session = useSession();
 
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ["suppliers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("suppliers")
+        .select("*")
+        .eq("user_id", session?.user?.id);
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!session?.user?.id,
+  });
+
   const handleAddSupplier = async () => {
     if (!supplierName.trim()) {
       toast.error("Inserisci il nome del fornitore");
+      return;
+    }
+
+    if (!session?.user?.id) {
+      toast.error("Devi essere autenticato per aggiungere un fornitore");
       return;
     }
 
@@ -34,7 +54,7 @@ const SupplierPrices = () => {
         .insert([
           {
             name: supplierName,
-            user_id: session?.user?.id
+            user_id: session.user.id
           }
         ]);
 
@@ -85,10 +105,20 @@ const SupplierPrices = () => {
         </Dialog>
       </CardHeader>
       <CardContent>
-        {/* TODO: Implementare la visualizzazione dei fornitori e dei loro prezzi */}
-        <p className="text-gray-500">
-          Aggiungi i tuoi fornitori per iniziare a tracciare i prezzi degli ingredienti.
-        </p>
+        {suppliers.length === 0 ? (
+          <p className="text-gray-500">
+            Aggiungi i tuoi fornitori per iniziare a tracciare i prezzi degli ingredienti.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {suppliers.map((supplier) => (
+              <div key={supplier.id} className="p-4 border rounded-lg">
+                <h3 className="font-semibold">{supplier.name}</h3>
+                {/* TODO: Implementare la gestione dei prezzi per ogni fornitore */}
+              </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
