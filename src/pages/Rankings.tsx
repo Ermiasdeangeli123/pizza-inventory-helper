@@ -6,17 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { it } from 'date-fns/locale';
+import type { RestaurantRankingsView } from "@/integrations/supabase/types";
 
 type TimeRange = "daily" | "weekly" | "monthly";
-
-interface RankingData {
-  restaurant_name: string;
-  restaurant_id: string;
-  period_start: string;
-  pizzas_sold: number;
-  total_quantity: number;
-  total_revenue: number;
-}
 
 const Rankings = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>("daily");
@@ -31,7 +23,7 @@ const Rankings = () => {
         .order('total_quantity', { ascending: false });
 
       if (error) throw error;
-      return data as RankingData[];
+      return data as RestaurantRankingsView["Row"][];
     }
   });
 

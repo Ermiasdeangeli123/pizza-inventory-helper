@@ -5,6 +5,7 @@ import { PizzasTable, PizzaIngredientsTable } from './pizzas';
 import { ProfilesTable } from './profiles';
 import { SalesTable } from './sales';
 import { WaitlistTable } from './waitlist';
+import { RestaurantRankingsView } from './rankings';
 
 export type Database = {
   public: {
@@ -17,7 +18,9 @@ export type Database = {
       sales: SalesTable;
       waitlist: WaitlistTable;
     };
-    Views: Record<string, never>;
+    Views: {
+      restaurant_rankings: RestaurantRankingsView;
+    };
     Functions: {
       populate_data_for_user: {
         Args: {
@@ -38,3 +41,4 @@ export type * from './pizzas';
 export type * from './profiles';
 export type * from './sales';
 export type * from './waitlist';
+export type * from './rankings';
