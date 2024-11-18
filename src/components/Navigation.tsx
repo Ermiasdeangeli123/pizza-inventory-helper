@@ -34,6 +34,7 @@ const Navigation = ({ session }: NavigationProps) => {
     { path: "/menu", label: "Menu" },
     { path: "/shopping", label: "Lista Spesa" },
     { path: "/rankings", label: "Classifica" },
+    { path: "/analysis", label: "Analisi" },
   ];
 
   const NavLinks = ({ onClick }: { onClick?: () => void }) => (
