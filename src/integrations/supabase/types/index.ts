@@ -29,7 +29,7 @@ export type Database = {
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
-}
+};
 
 export type * from './base';
 export type * from './categories';
