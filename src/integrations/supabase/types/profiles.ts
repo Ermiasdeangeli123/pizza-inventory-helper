@@ -7,7 +7,6 @@ export interface ProfilesTable extends BaseTable {
     subscription_end_date: string | null;
     created_at: string | null;
     updated_at: string | null;
-    currency: string | null;
     restaurant_name: string | null;
   };
   Insert: {
@@ -16,7 +15,6 @@ export interface ProfilesTable extends BaseTable {
     subscription_end_date?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
-    currency?: string | null;
     restaurant_name?: string | null;
   };
   Update: {
@@ -25,7 +23,6 @@ export interface ProfilesTable extends BaseTable {
     subscription_end_date?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
-    currency?: string | null;
     restaurant_name?: string | null;
   };
   Relationships: [];
