@@ -8,11 +8,13 @@ import SalesTable from "@/components/sales/SalesTable";
 import { useAddSale } from "@/queries/salesQueries";
 import SalesChart from "@/components/dashboard/SalesChart";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCurrency } from "@/hooks/useCurrency";
 
 const Dashboard = () => {
   const { data: pizzas = [], isLoading } = usePizzas();
   const { data: sales = [] } = useSales();
   const addSale = useAddSale();
+  const { formatPrice } = useCurrency();
   const { data: inventory = [] } = useQuery({
     queryKey: ['inventory'],
     queryFn: async () => {
@@ -101,7 +103,7 @@ const Dashboard = () => {
             <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-200" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-700 dark:text-green-100">€{totalRevenue.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-green-700 dark:text-green-100">{formatPrice(totalRevenue)}</div>
           </CardContent>
         </Card>
 
@@ -111,7 +113,7 @@ const Dashboard = () => {
             <TrendingDown className="h-4 w-4 text-red-600 dark:text-red-200" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-700 dark:text-red-100">€{totalCosts.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-red-700 dark:text-red-100">{formatPrice(totalCosts)}</div>
           </CardContent>
         </Card>
 
@@ -121,7 +123,7 @@ const Dashboard = () => {
             <Euro className={`h-4 w-4 ${profit >= 0 ? 'text-blue-600 dark:text-blue-200' : 'text-red-600 dark:text-red-200'}`} />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${profit >= 0 ? 'text-blue-700 dark:text-blue-100' : 'text-red-700 dark:text-red-100'}`}>€{profit.toFixed(2)}</div>
+            <div className={`text-2xl font-bold ${profit >= 0 ? 'text-blue-700 dark:text-blue-100' : 'text-red-700 dark:text-red-100'}`}>{formatPrice(profit)}</div>
           </CardContent>
         </Card>
       </div>

@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import RecipeEditor from "./RecipeEditor";
+import { useCurrency } from "@/hooks/useCurrency";
 
 interface MenuTableProps {
   pizzas: Pizza[];
@@ -32,6 +33,7 @@ const MenuTable = ({ pizzas, onUpdatePizza, onDeletePizza, onUpdateRecipe }: Men
   const [editForm, setEditForm] = useState<Partial<Pizza>>({});
   const [recipeDialogOpen, setRecipeDialogOpen] = useState(false);
   const [selectedPizzaId, setSelectedPizzaId] = useState<string | null>(null);
+  const { formatPrice } = useCurrency();
 
   const handleEdit = (pizza: Pizza) => {
     setEditingId(pizza.id);
@@ -120,7 +122,7 @@ const MenuTable = ({ pizzas, onUpdatePizza, onDeletePizza, onUpdateRecipe }: Men
                       min="0"
                     />
                   ) : (
-                    `€${pizza.price.toFixed(2)}`
+                    formatPrice(pizza.price)
                   )}
                 </TableCell>
                 <TableCell className="text-right min-w-[180px]">
