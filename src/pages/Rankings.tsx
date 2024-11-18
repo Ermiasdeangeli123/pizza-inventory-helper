@@ -88,7 +88,7 @@ const Rankings = () => {
                   <TableCell className="text-right">{ranking.total_quantity}</TableCell>
                   <TableCell className="text-right">€{ranking.total_revenue.toFixed(2)}</TableCell>
                 </TableRow>
-              )}
+              ))}
             </TableBody>
           </Table>
         </CardContent>
