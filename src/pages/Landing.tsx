@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import FAQSection from "@/components/landing/FAQSection";
+import { HowItWorks } from "@/components/landing/HowItWorks";
 
 const Landing = () => {
   const [email, setEmail] = useState("");
@@ -161,22 +162,11 @@ const Landing = () => {
           </div>
 
           {/* Features Grid */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold mb-8 text-red-800">Funzionalità Principali</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg border border-orange-100">
-                  <feature.icon className="w-12 h-12 text-red-600 mb-4" />
-                  <h3 className="text-xl font-semibold mb-2 text-red-700">{feature.title}</h3>
-                  <p className="text-orange-900/70">{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <HowItWorks />
 
           {/* FAQ Section */}
           <FAQSection />
-
+          
           {/* Newsletter Section */}
           <div className="max-w-2xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold mb-4 text-red-800">

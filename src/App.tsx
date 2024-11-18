@@ -14,11 +14,11 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 import Shopping from "./pages/Shopping";
-import Rankings from "./pages/Rankings";
 import Analysis from "./pages/Analysis";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import { Feedback } from "./components/Feedback";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -101,15 +101,12 @@ const App = () => {
                 element={session ? <Account /> : <Navigate to="/login" />}
               />
               <Route
-                path="/rankings"
-                element={session ? <Rankings /> : <Navigate to="/login" />}
-              />
-              <Route
                 path="/analysis"
                 element={session ? <Analysis /> : <Navigate to="/login" />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+            {session && <Feedback />}
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
