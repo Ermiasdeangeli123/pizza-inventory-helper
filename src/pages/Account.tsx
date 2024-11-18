@@ -1,193 +1,133 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@supabase/auth-helpers-react";
+import { toast } from "sonner";
+
+interface Profile {
+  first_name: string | null;
+  last_name: string | null;
+  currency: string;
+}
 
 const Account = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [newPassword, setNewPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-
-  // Fetch user profile
-  const { data: profile, isLoading } = useQuery({
-    queryKey: ['profile'],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not found');
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      return profile;
-    }
+  const session = useSession();
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<Profile>({
+    first_name: "",
+    last_name: "",
+    currency: "EUR"
   });
 
-  // Update profile mutation
-  const updateProfile = useMutation({
-    mutationFn: async ({ firstName, lastName }: { firstName: string; lastName: string }) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not found');
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        if (!session?.user?.id) throw new Error("No user ID");
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("first_name, last_name, currency")
+          .eq("id", session.user.id)
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          setProfile({
+            first_name: data.first_name,
+            last_name: data.last_name,
+            currency: data.currency || "EUR"
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProfile();
+  }, [session]);
+
+  const updateProfile = async () => {
+    try {
+      if (!session?.user?.id) throw new Error("No user ID");
 
       const { error } = await supabase
-        .from('profiles')
-        .update({ first_name: firstName, last_name: lastName })
-        .eq('id', user.id);
+        .from("profiles")
+        .update({
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          currency: profile.currency,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", session.user.id);
 
       if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast.success("Profilo aggiornato con successo");
-    },
-    onError: () => {
-      toast.error("Errore durante l'aggiornamento del profilo");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Errore nell'aggiornamento del profilo");
     }
-  });
-
-  // Update password mutation
-  const updatePassword = useMutation({
-    mutationFn: async (newPassword: string) => {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      setNewPassword("");
-      toast.success("Password aggiornata con successo");
-    },
-    onError: () => {
-      toast.error("Errore durante l'aggiornamento della password");
-    }
-  });
-
-  const handleUpdateProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateProfile.mutate({ firstName, lastName });
   };
 
-  const handleUpdatePassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPassword.length < 6) {
-      toast.error("La password deve essere di almeno 6 caratteri");
-      return;
-    }
-    updatePassword.mutate(newPassword);
-  };
-
-  if (isLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Caricamento...</div>;
+  if (loading) {
+    return <div>Caricamento...</div>;
   }
 
   return (
-    <div className="container max-w-4xl py-8">
-      <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="profile">Profilo</TabsTrigger>
-          <TabsTrigger value="security">Sicurezza</TabsTrigger>
-          <TabsTrigger value="subscription">Abbonamento</TabsTrigger>
-        </TabsList>
+    <div className="container mx-auto p-4">
+      <Card className="max-w-2xl mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-6">Il Tuo Profilo</h1>
+        
+        <div className="space-y-6">
+          <div className="grid gap-2">
+            <Label htmlFor="first_name">Nome</Label>
+            <Input
+              id="first_name"
+              type="text"
+              value={profile.first_name || ""}
+              onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
+            />
+          </div>
 
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profilo</CardTitle>
-              <CardDescription>
-                Gestisci le tue informazioni personali
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleUpdateProfile} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Nome</Label>
-                  <Input
-                    id="firstName"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    placeholder={profile?.first_name || "Inserisci il tuo nome"}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Cognome</Label>
-                  <Input
-                    id="lastName"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder={profile?.last_name || "Inserisci il tuo cognome"}
-                  />
-                </div>
-                <Button type="submit">Aggiorna Profilo</Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
+          <div className="grid gap-2">
+            <Label htmlFor="last_name">Cognome</Label>
+            <Input
+              id="last_name"
+              type="text"
+              value={profile.last_name || ""}
+              onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
+            />
+          </div>
 
-        <TabsContent value="security">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sicurezza</CardTitle>
-              <CardDescription>
-                Gestisci la tua password e le impostazioni di sicurezza
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleUpdatePassword} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">Nuova Password</Label>
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Inserisci la nuova password"
-                  />
-                </div>
-                <Button type="submit">Aggiorna Password</Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="subscription">
-          <Card>
-            <CardHeader>
-              <CardTitle>Abbonamento</CardTitle>
-              <CardDescription>
-                Gestisci il tuo abbonamento e i pagamenti
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-muted rounded-lg">
-                  <h3 className="font-medium">
-                    Stato Abbonamento: {profile?.subscription_status === 'active' ? 'Attivo' : 'Gratuito'}
-                  </h3>
-                  {profile?.subscription_end_date && (
-                    <p className="text-sm text-muted-foreground">
-                      Scadenza: {new Date(profile.subscription_end_date).toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
-                <Button variant="outline" onClick={() => navigate("/pricing")}>
-                  Gestisci Abbonamento
-                </Button>
+          <div className="grid gap-2">
+            <Label>Valuta</Label>
+            <RadioGroup
+              value={profile.currency}
+              onValueChange={(value) => setProfile({ ...profile, currency: value })}
+              className="flex gap-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="EUR" id="eur" />
+                <Label htmlFor="eur">Euro (€)</Label>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="CHF" id="chf" />
+                <Label htmlFor="chf">Franco Svizzero (CHF)</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <Button onClick={updateProfile}>
+            Aggiorna Profilo
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 };

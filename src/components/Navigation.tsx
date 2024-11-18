@@ -78,7 +78,7 @@ const Navigation = ({ session }: NavigationProps) => {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[240px] sm:w-[300px]">
+              <SheetContent side="left" className="w-[240px] sm:w-[300px]">
                 <div className="flex flex-col gap-4 mt-8">
                   <NavigationMenu className="block">
                     <NavigationMenuList className="flex-col items-start">
