@@ -1,30 +1,114 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
-import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { supabase } from "@/integrations/supabase/client";
+import Navigation from "./components/Navigation";
 import Index from "./pages/Index";
 import Menu from "./pages/Menu";
 import Landing from "./pages/Landing";
-import Costs from "./pages/Costs"; // Import the new Costs page
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Account from "./pages/Account";
+import Shopping from "./pages/Shopping";
 import Rankings from "./pages/Rankings";
+import { useEffect, useState } from "react";
+import { Session } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 
 const App = () => {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Initial session:", session?.user?.id);
+      setSession(session);
+      if (session?.user) {
+        toast.success("Bentornato!");
+      }
+    });
+
+    // Listen for changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session?.user?.id);
+      
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('Token has been refreshed');
+      }
+      
+      if (event === 'SIGNED_OUT') {
+        // Clear any application cache/state if needed
+        queryClient.clear();
+      }
+      
+      setSession(session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Toaster />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/costs" element={<Costs />} /> {/* Add this line for the Costs page */}
-          <Route path="/rankings" element={<Rankings />} />
-          <Route path="/landing" element={<Landing />} />
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+    <SessionContextProvider 
+      supabaseClient={supabase} 
+      initialSession={session}
+    >
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Navigation session={session} />
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/dashboard"
+                element={session ? <Dashboard /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/inventory"
+                element={session ? <Index /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/menu"
+                element={session ? <Menu /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/shopping"
+                element={session ? <Shopping /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/account"
+                element={session ? <Account /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/rankings"
+                element={session ? <Rankings /> : <Navigate to="/login" />}
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </SessionContextProvider>
   );
 };
 

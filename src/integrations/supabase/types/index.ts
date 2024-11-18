@@ -6,7 +6,6 @@ import { ProfilesTable } from './profiles';
 import { SalesTable } from './sales';
 import { WaitlistTable } from './waitlist';
 import { RestaurantRankingsView } from './rankings';
-import { SuppliersTable, SupplierPricesTable } from './suppliers';
 
 export type Database = {
   public: {
@@ -18,8 +17,6 @@ export type Database = {
       profiles: ProfilesTable;
       sales: SalesTable;
       waitlist: WaitlistTable;
-      suppliers: SuppliersTable;
-      supplier_prices: SupplierPricesTable;
     };
     Views: {
       restaurant_rankings: RestaurantRankingsView;
@@ -45,4 +42,3 @@ export type { ProfilesTable } from './profiles';
 export type { SalesTable } from './sales';
 export type { WaitlistTable } from './waitlist';
 export type { RestaurantRankingsView } from './rankings';
-export type { SuppliersTable, SupplierPricesTable } from './suppliers';
