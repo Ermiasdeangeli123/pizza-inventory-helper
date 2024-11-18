@@ -26,10 +26,18 @@ export function FeedbackDialog({ open, onOpenChange, type }: FeedbackDialogProps
 
   const handleSubmit = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("Devi essere autenticato per inviare feedback");
+        return;
+      }
+
       const { error } = await supabase.from("feedback").insert({
         content,
         rating,
         feedback_type: type,
+        user_id: user.id
       });
 
       if (error) throw error;
