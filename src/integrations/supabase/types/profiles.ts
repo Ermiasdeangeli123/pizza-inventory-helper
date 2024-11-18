@@ -9,7 +9,7 @@ export interface ProfilesTable extends BaseTable {
     subscription_end_date: string | null;
     created_at: string | null;
     updated_at: string | null;
-    currency: string;
+    currency: string | null;
   };
   Insert: {
     id: string;
@@ -19,7 +19,7 @@ export interface ProfilesTable extends BaseTable {
     subscription_end_date?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
-    currency?: string;
+    currency?: string | null;
   };
   Update: {
     id?: string;
@@ -29,7 +29,7 @@ export interface ProfilesTable extends BaseTable {
     subscription_end_date?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
-    currency?: string;
+    currency?: string | null;
   };
   Relationships: [];
 }

@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
+import type { ProfilesTable } from "@/integrations/supabase/types/profiles";
 
 interface Profile {
   first_name: string | null;
@@ -32,7 +33,7 @@ const Account = () => {
           .from("profiles")
           .select("first_name, last_name, currency")
           .eq("id", session.user.id)
-          .single();
+          .single<Pick<ProfilesTable['Row'], 'first_name' | 'last_name' | 'currency'>>();
 
         if (error) throw error;
 

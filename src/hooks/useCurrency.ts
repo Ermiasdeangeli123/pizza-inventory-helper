@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@supabase/auth-helpers-react';
+import type { ProfilesTable } from '@/integrations/supabase/types/profiles';
 
 export function useCurrency() {
   const session = useSession();
@@ -16,7 +17,7 @@ export function useCurrency() {
           .from('profiles')
           .select('currency')
           .eq('id', session.user.id)
-          .single();
+          .single<Pick<ProfilesTable['Row'], 'currency'>>();
 
         if (error) throw error;
         if (data?.currency) {
