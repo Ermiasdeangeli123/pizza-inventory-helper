@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
+import Shopping from "./pages/Shopping";
 import Analysis from "./pages/Analysis";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
@@ -110,6 +111,10 @@ const App = () => {
               <Route
                 path="/menu"
                 element={session ? <Menu /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/shopping"
+                element={session ? <Shopping /> : <Navigate to="/login" />}
               />
               <Route
                 path="/account"

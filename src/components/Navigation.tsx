@@ -32,6 +32,7 @@ const Navigation = ({ session }: NavigationProps) => {
     { path: "/dashboard", label: "Dashboard" },
     { path: "/inventory", label: "Inventario" },
     { path: "/menu", label: "Menu" },
+    { path: "/shopping", label: "Lista Spesa" },
     { path: "/analysis", label: "Analisi" },
   ];
 
