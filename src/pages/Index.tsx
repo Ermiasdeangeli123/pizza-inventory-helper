@@ -2,6 +2,7 @@ import { categories } from "@/lib/data";
 import CategorySection from "@/components/CategorySection";
 import { useInventory, useUpdateInventory, useAddInventoryItem, useDeleteInventoryItem } from "@/queries/inventoryQueries";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { InventoryItem } from "@/lib/data";
 
 const Index = () => {
@@ -70,6 +71,37 @@ const Index = () => {
     initialQuantity: item.initial_quantity,
     expiryDate: item.expiry_date
   })) || [];
+
+  if (inventory.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>Benvenuto nell'Inventario</CardTitle>
+              <CardDescription>
+                Qui puoi gestire tutti gli ingredienti del tuo ristorante.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                L'inventario ti permette di:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Tenere traccia delle quantità di ogni ingrediente</li>
+                <li>Impostare scorte minime per non rimanere mai senza ingredienti</li>
+                <li>Monitorare le date di scadenza</li>
+                <li>Calcolare i costi e gli sprechi</li>
+              </ul>
+              <p className="text-sm text-muted-foreground mt-4">
+                Inizia aggiungendo i tuoi primi ingredienti utilizzando i pulsanti "Aggiungi" in ogni categoria.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
