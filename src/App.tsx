@@ -18,7 +18,6 @@ import Analysis from "./pages/Analysis";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
-import { Feedback } from "./components/Feedback";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -106,7 +105,6 @@ const App = () => {
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-            {session && <Feedback />}
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
