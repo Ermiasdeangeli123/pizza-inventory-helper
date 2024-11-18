@@ -5,9 +5,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { categories } from "@/lib/data";
 import { ShoppingBag } from "lucide-react";
+import { useCurrency } from "@/hooks/useCurrency";
 
 const Shopping = () => {
   const { data: inventory, isLoading } = useInventory();
+  const { formatPrice } = useCurrency();
 
   if (isLoading) {
     return (
@@ -43,7 +45,7 @@ const Shopping = () => {
 
   // Calcola il costo stimato dell'ordine
   const calculateEstimatedCost = (item: typeof lowStockItems[0], quantity: number) => {
-    return (quantity * item.cost_per_unit).toFixed(2);
+    return quantity * item.cost_per_unit;
   };
 
   return (
@@ -103,7 +105,7 @@ const Shopping = () => {
                                 Ordine suggerito: {suggestedQuantity} {item.unit}
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                Costo stimato: €{estimatedCost}
+                                Costo stimato: {formatPrice(estimatedCost)}
                               </div>
                             </div>
                           </div>
