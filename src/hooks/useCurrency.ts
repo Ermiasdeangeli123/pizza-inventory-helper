@@ -19,8 +19,8 @@ export function useCurrency() {
           .single();
 
         if (error) throw error;
-        if (data) {
-          setCurrency(data.currency || 'EUR');
+        if (data?.currency) {
+          setCurrency(data.currency);
         }
       } catch (error) {
         console.error('Error fetching currency:', error);
